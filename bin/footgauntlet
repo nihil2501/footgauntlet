@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+dir = File.expand_path("../lib", __dir__)
+unless $LOAD_PATH.include?(dir)
+  $LOAD_PATH.unshift(dir)
+end
+
+require "footgauntlet"
+
+Footgauntlet::CLI.start

@@ -6,7 +6,7 @@ module Footgauntlet
   module Logging
     class << self
       def logger
-        @@logger ||= 
+        # @@logger ||= 
       end
     end
   end

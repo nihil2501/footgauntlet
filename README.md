@@ -4,3 +4,4 @@
 * trap signals?
 * configuration object? boundary with option parsing?
 * non-blocking io?
+* set up logging

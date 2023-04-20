@@ -1,15 +1,16 @@
 # frozen_sting_literal: true
 
+# Is there any good way to remove dependency on `Exit` in `Options`?
+require "footgauntlet/shell/exit"
+require "footgauntlet/error"
 require "optparse"
 
 module Footgauntlet
-  module CLI
+  module Shell
     class Options
-      autoload :Exit, "footgauntlet/cli/exit"
-
-      Error = Class.new(RuntimeError)
-      DuplicateFilePathError = Class.new(Error)
-      ParseError = Class.new(Error)
+      OptionsError = Class.new(Error)
+      DuplicateFilePathError = Class.new(OptionsError)
+      ParseError = Class.new(OptionsError)
 
       class << self
         alias_method :parse!, :new
@@ -38,8 +39,7 @@ module Footgauntlet
 
         @parser.on("-h", "--help", "Prints this help message") do
           STDERR.puts @parser
-          # TODO: Considering callers, does success make sense here?
-          Exit.success!
+          Exit.success
         end
 
         begin
@@ -50,10 +50,9 @@ module Footgauntlet
             # Is there a better patern that doesn't involve nesting `begin`s?
             raise ParseError, ex.message
           end
-        rescue Error => ex
-          STDERR.puts "Error: #{ex.message}"
+        rescue OptionsError => ex
           STDERR.puts @parser
-          Exit.options_invalid!
+          raise ex
         end
 
         # TODO: Vet tradeoffs of synced vs buffered for each IO.

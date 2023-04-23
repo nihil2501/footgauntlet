@@ -11,7 +11,7 @@ module Footgauntlet
           @points = 0
         end
 
-        def tally(value)
+        def award(value)
           @points += value
         end
       end

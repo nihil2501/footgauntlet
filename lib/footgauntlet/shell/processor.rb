@@ -27,20 +27,23 @@ module Footgauntlet
           rescue DeserializationError => ex
             # TODO: Just `warn` this `game` and continue.
           end
+
+          processor.emit
         end
 
         private
 
         def serialize_summary(summary)
           String.new.tap do |memo|
-            memo << "Matchday #{summary.day_number}\n"
+            memo << "Matchday #{summary.matchday_number}\n"
 
             summary.top_ranked_team_points.each do |team_points|
               name = team_points.team.name
               points = team_points.points
               unit = points == 1 ? "pt" : "pts"
 
-              # Rank is currently unused but nonetheless appears in the spec.
+              # Rank is currently unused but nonetheless appears barely
+              # unambiguously enough in the spec.
               memo << "#{name}, #{points} #{unit}\n"
             end
 
@@ -59,8 +62,8 @@ module Footgauntlet
               score = score.to_i
 
               Core::Models::TeamScore.new(
-                team: team,
-                score: score
+                team:,
+                score:,
               )
             end
 
@@ -68,8 +71,8 @@ module Footgauntlet
           home_score, away_score = team_scores
 
           Core::Models::Game.new(
-            home_score: home_score,
-            away_score: away_score
+            home_score:,
+            away_score:,
           )
         end
       end

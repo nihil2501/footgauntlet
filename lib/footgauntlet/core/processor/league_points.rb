@@ -6,25 +6,27 @@ module Footgauntlet
   module Core
     class Processor
       class LeaguePoints
-        module Values
+        include Enumerable
+
+        module Awards
           WIN = 3
           TIE = 1
           LOSS = 0
         end
 
-        def tally(game)
+        def award(game)
           if game.tied?
             game.teams.each do |team|
-              tallies[team].tally(Values::TIE)
+              tallies[team].award(Awards::TIE)
             end
           else
-            tallies[game.winner].tally(Values::WIN)
-            tallies[game.loser].tally(Values::LOSS)
+            tallies[game.winner].award(Awards::WIN)
+            tallies[game.loser].award(Awards::LOSS)
           end
         end
 
-        def max(...)
-          tallies.each_value.max(...)
+        def each(...)
+          tallies.each_value(...)
         end
 
         private
@@ -32,7 +34,7 @@ module Footgauntlet
         def tallies
           @tallies ||=
             Hash.new do |memo, team|
-              team_points = Models::TeamPoints.new(team: team)
+              team_points = Models::TeamPoints.new(team:)
               memo[team] = team_points
             end
         end

@@ -1,65 +1,66 @@
 # frozen_string_literal: true
 
-require "footgauntlet/core/models/daily_league_summary"
+require "footgauntlet/core/models/matchday_league_summary"
 require "footgauntlet/core/models/ranked_team_points"
 require "footgauntlet/core/processor/league_points"
-require "footgauntlet/core/processor/utils/bucket_counter"
-require "footgauntlet/core/processor/utils/value_ranker"
+require "utils/bucket_counter"
+require "utils/ranking"
 
 module Footgauntlet
   module Core
     class Processor
-      module TopTeamPoints
-        COUNT = 3
-        COMPARE = -> (a, b) {
-          memo = a.points <=> b.points
-          memo = b.team.name <=> a.team.name if memo.zero?
-          memo
-        }
+      module LeagueRanking
+        COMPARE = -> { _1.points <=> _2.points }
+        INNER_COMPARE = -> { _2.team.name <=> _1.team.name }
+        TOP_COUNT = 3
       end
 
       def initialize(&emit_callback)
         @emit_callback = emit_callback
         @league_points = LeaguePoints.new
-        @day_counter = Utils::BucketCounter.new
+        @matchday_counter = BucketCounter.new
       end
 
       def ingest(game)
-        if @day_counter.complete?(game.teams)
-          summary = calculate_summary
-          @emit_callback.(summary)
-        end
+        emit_summary if @matchday_counter.complete?(game.teams)
+        @league_points.award(game)
+      rescue => ex
+        puts ex.backtrace
+        raise ex
+      end
 
-        @league_points.tally(game)
+      def emit
+        @matchday_counter.complete!
+        emit_summary
       end
 
       private
 
+      def emit_summary
+        summary = calculate_summary
+        @emit_callback.(summary)
+      end
+
       def calculate_summary
         top_ranked_team_points =
-          # First iteration.
-          @league_points.max(
-            TopTeamPoints::COUNT,
-            &TopTeamPoints::COMPARE
-          )        
+          Ranking.generate do |config|
+            config.compare = LeagueRanking::COMPARE
+            config.inner_compare = LeagueRanking::INNER_COMPARE
+            config.top_count = LeagueRanking::TOP_COUNT
+            config.enumerable = @league_points
 
-        enum = top_ranked_team_points.map!
-        enum = enum.with_object(Utils::ValueRanker.new)
+            config.map =
+              lambda do |team_points, rank|
+                Models::RankedTeamPoints.new(
+                  team_points:,
+                  rank:,
+                )
+              end
+          end
 
-        # Second, small iteration.
-        enum.each do |team_points, points_ranker|
-          points = team_points.points
-          rank = points_ranker.rank(points)
-
-          Models::RankedTeamPoints.new(
-            team_points: team_points,
-            rank: rank
-          )
-        end
-
-        Models::DailyLeagueSummary.new(
-          top_ranked_team_points: top_ranked_team_points,
-          day_number: @day_counter.value
+        Models::MatchdayLeagueSummary.new(
+          matchday_number: @matchday_counter.value,
+          top_ranked_team_points:,
         )
       end
     end

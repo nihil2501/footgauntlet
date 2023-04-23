@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
-require "utils/read_only_struct"
-
 module Footgauntlet
   module Core
     module Models
-      DailyLeagueSummary =
-        ReadOnlyStruct.new(
+      MatchdayLeagueSummary =
+        Data.define(
           :top_ranked_team_points,
-          :day_number
+          :matchday_number
         )
     end
   end

@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
-require "set"
 require "utils/read_only_struct"
 
 module Footgauntlet
   module Core
     module Models
+      # This doesn't quite work with Ruby's builtin `Data` because we're doing
+      # memoization with instance variables but `Data` objects are frozen.
       class Game < ReadOnlyStruct.new(:home_score, :away_score)
         def teams
           @teams ||= Set[
@@ -15,23 +16,23 @@ module Footgauntlet
         end
 
         def winner
-          compare
+          determine_outcome
           @winner
         end
 
         def loser
-          compare
+          determine_outcome
           @loser
         end
 
         def tied?
-          compare
+          determine_outcome
           @winner.nil?
         end
 
         private
 
-        def compare
+        def determine_outcome
           return if @comparison
           @comparison =
             home_score.score <=>

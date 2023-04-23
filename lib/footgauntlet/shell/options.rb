@@ -33,9 +33,9 @@ module Footgauntlet
 
         # TODO: How to set mode re: recovery? How to do recovery / fault
         # tolerance in general?
-        on_file("input", "r") { |file| @input_stream = file }
-        on_file("output", "w") { |file| @output_stream = file }
-        on_file("logs", "w") { |file| @log = file }
+        on_file("input", "r") { @input_stream = _1 }
+        on_file("output", "w") { @output_stream = _1 }
+        on_file("logs", "w") { @log = _1 }
 
         @parser.on("-h", "--help", "Prints this help message") do
           STDERR.puts @parser
@@ -71,11 +71,7 @@ module Footgauntlet
         ]
 
         @parser.on(*args) do |path|
-          @file_paths ||= begin
-            require "set"
-            Set[]
-          end
-
+          @file_paths ||= Set[]
           unless @file_paths.add?(path)
             error_message = "File path used more than once: `#{path}'"
             raise DuplicateFilePathError, error_message

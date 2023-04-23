@@ -5,3 +5,5 @@
 * configuration object? boundary with option parsing?
 * non-blocking io?
 * set up logging
+* template (+ inverse)
+* use numbered block args

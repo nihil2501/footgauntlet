@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-require "utils/read_only_struct"
-
 module Footgauntlet
   module Core
     module Models
       TeamScore =
-        ReadOnlyStruct.new(
+        Data.define(
           :team,
           :score
         )

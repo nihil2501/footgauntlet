@@ -9,12 +9,6 @@ require "utils/ranking"
 module Footgauntlet
   module Core
     class Processor
-      module LeagueRanking
-        COMPARE = -> { _1.points <=> _2.points }
-        INNER_COMPARE = -> { _2.team.name <=> _1.team.name }
-        TOP_COUNT = 3
-      end
-
       def initialize(&emit_callback)
         @emit_callback = emit_callback
         @league_points = LeaguePoints.new
@@ -22,21 +16,24 @@ module Footgauntlet
       end
 
       def ingest(game)
-        if @matchday_counter.complete?(game.teams)
-          @emit_callback.(league_summary)
-        end
-
+        emit_league_summary if @matchday_counter.complete?(game.teams)
         @league_points.award(game)
       end
 
       def emit
         @matchday_counter.complete!
-        @emit_callback.(league_summary)
+        emit_league_summary
       end
 
       private
 
-      def league_summary
+      module LeagueRanking
+        COMPARE = -> { _1.points <=> _2.points }
+        INNER_COMPARE = -> { _2.team.name <=> _1.team.name }
+        TOP_COUNT = 3
+      end
+
+      def emit_league_summary
         @league_ranking ||=
           Ranking.new do |config|
             config.compare = LeagueRanking::COMPARE
@@ -53,10 +50,13 @@ module Footgauntlet
               end
           end
 
-        Models::LeagueSummary.new(
-          top_ranked_team_points: @league_ranking.rank,
-          matchday_count: @matchday_counter.value,
-        )
+        league_summary =
+          Models::LeagueSummary.new(
+            top_ranked_team_points: @league_ranking.rank,
+            matchday_count: @matchday_counter.value,
+          )
+
+        @emit_callback.(league_summary)
       end
     end
   end

@@ -5,8 +5,8 @@ module Footgauntlet
     module Models
       LeagueSummary =
         Data.define(
-          :top_ranked_team_points,
-          :matchday_count
+          :matchday_number,
+          :ranking,
         )
     end
   end

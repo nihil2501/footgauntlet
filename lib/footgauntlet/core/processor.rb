@@ -4,10 +4,14 @@ require "footgauntlet/core/models/league_summary"
 require "footgauntlet/core/models/ranked_team_points"
 require "footgauntlet/core/processor/league_points"
 require "utils/bucket_counter"
-require "utils/ranking"
+require "utils/ranker"
 
 module Footgauntlet
   module Core
+    # TODO: Move this to a named processer (something about 'league summary') as
+    # part of an idea to have this app be a stream processor for multiple
+    # streams a la Apache Kafka. After named, internal names can drop redundant
+    # prefixes.
     class Processor
       def initialize(&emit_callback)
         @emit_callback = emit_callback
@@ -30,18 +34,16 @@ module Footgauntlet
       module LeagueRanking
         COMPARE = -> { _1.points <=> _2.points }
         INNER_COMPARE = -> { _2.team.name <=> _1.team.name }
-        TOP_COUNT = 3
+        COUNT = 3
       end
 
       def emit_league_summary
-        @league_ranking ||=
-          Ranking.new do |config|
-            config.compare = LeagueRanking::COMPARE
-            config.inner_compare = LeagueRanking::INNER_COMPARE
-            config.top_count = LeagueRanking::TOP_COUNT
-            config.enumerable = @league_points
+        @league_ranker ||=
+          Ranker.new do |definition|
+            definition.compare = LeagueRanking::COMPARE
+            definition.inner_compare = LeagueRanking::INNER_COMPARE
 
-            config.map =
+            definition.map =
               lambda do |team_points, rank|
                 Models::RankedTeamPoints.new(
                   team_points:,
@@ -50,10 +52,16 @@ module Footgauntlet
               end
           end
 
+        league_ranking =
+          @league_ranker.rank(
+            @league_points,
+            LeagueRanking::COUNT,
+          )
+
         league_summary =
           Models::LeagueSummary.new(
-            top_ranked_team_points: @league_ranking.rank,
-            matchday_count: @matchday_counter.value,
+            matchday_number: @matchday_counter.value,
+            ranking: league_ranking,
           )
 
         @emit_callback.(league_summary)

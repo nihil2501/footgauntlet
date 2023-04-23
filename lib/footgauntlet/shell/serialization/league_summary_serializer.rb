@@ -7,11 +7,11 @@ module Footgauntlet
         class << self
           def serialize(summary)
             String.new.tap do |memo|
-              memo << "Matchday #{summary.matchday_count}\n"
+              memo << "Matchday #{summary.matchday_number}\n"
 
-              summary.top_ranked_team_points.each do |team_points|
-                name = team_points.team.name
-                points = team_points.points
+              summary.ranking.each do |ranked_team_points|
+                name = ranked_team_points.team.name
+                points = ranked_team_points.points
                 unit = points == 1 ? "pt" : "pts"
 
                 # Rank is currently unused but nonetheless appears barely

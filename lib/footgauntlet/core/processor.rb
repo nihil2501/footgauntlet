@@ -22,21 +22,23 @@ module Footgauntlet
       end
 
       def ingest(game)
-        emit_summary if @matchday_counter.complete?(game.teams)
+        if @matchday_counter.complete?(game.teams)
+          @emit_callback.(league_summary)
+        end
+
         @league_points.award(game)
       end
 
       def emit
         @matchday_counter.complete!
-        emit_summary
+        @emit_callback.(league_summary)
       end
 
       private
 
-      def emit_summary
-        top_ranked_team_points =
-          # TODO: Maybe reuse a single ranking object each time we emit.
-          Ranking.generate do |config|
+      def league_summary
+        @league_ranking ||=
+          Ranking.new do |config|
             config.compare = LeagueRanking::COMPARE
             config.inner_compare = LeagueRanking::INNER_COMPARE
             config.top_count = LeagueRanking::TOP_COUNT
@@ -51,13 +53,10 @@ module Footgauntlet
               end
           end
 
-        summary =
-          Models::LeagueSummary.new(
-            matchday_count: @matchday_counter.value,
-            top_ranked_team_points:,
-          )
-
-        @emit_callback.(summary)
+        Models::LeagueSummary.new(
+          top_ranked_team_points: @league_ranking.rank,
+          matchday_count: @matchday_counter.value,
+        )
       end
     end
   end

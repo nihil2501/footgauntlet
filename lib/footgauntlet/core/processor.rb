@@ -35,6 +35,7 @@ module Footgauntlet
 
       def emit_summary
         top_ranked_team_points =
+          # TODO: Maybe reuse a single ranking object each time we emit.
           Ranking.generate do |config|
             config.compare = LeagueRanking::COMPARE
             config.inner_compare = LeagueRanking::INNER_COMPARE

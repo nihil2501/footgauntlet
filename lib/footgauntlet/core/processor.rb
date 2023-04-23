@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "footgauntlet/core/models/matchday_league_summary"
+require "footgauntlet/core/models/league_summary"
 require "footgauntlet/core/models/ranked_team_points"
 require "footgauntlet/core/processor/league_points"
 require "utils/bucket_counter"
@@ -51,8 +51,8 @@ module Footgauntlet
           end
 
         summary =
-          Models::MatchdayLeagueSummary.new(
-            matchday_number: @matchday_counter.value,
+          Models::LeagueSummary.new(
+            matchday_count: @matchday_counter.value,
             top_ranked_team_points:,
           )
 

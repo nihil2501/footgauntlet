@@ -3,11 +3,11 @@
 module Footgauntlet
   module Shell
     module Serialization
-      module MatchdayLeagueSummarySerializer
+      module LeagueSummarySerializer
         class << self
-          def perform(summary)
+          def serialize(summary)
             String.new.tap do |memo|
-              memo << "Matchday #{summary.matchday_number}\n"
+              memo << "Matchday #{summary.matchday_count}\n"
 
               summary.top_ranked_team_points.each do |team_points|
                 name = team_points.team.name

@@ -7,3 +7,4 @@
 * set up logging
 * template (+ inverse)
 * use numbered block args
+* rename matchday things?

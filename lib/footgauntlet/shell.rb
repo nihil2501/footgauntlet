@@ -5,7 +5,7 @@ require "footgauntlet/shell/exit"
 require "footgauntlet/shell/options"
 require "footgauntlet/core/processor"
 require "footgauntlet/shell/serialization/game_deserializer"
-require "footgauntlet/shell/serialization/matchday_league_summary_serializer"
+require "footgauntlet/shell/serialization/league_summary_serializer"
 require "footgauntlet/shell/serialization/deserialization_error"
 
 module Footgauntlet
@@ -16,15 +16,15 @@ module Footgauntlet
 
         processor =
           Core::Processor.new do |summary|
-            output = Serialization::MatchdayLeagueSummarySerializer.perform(summary)
+            output = Serialization::LeagueSummarySerializer.serialize(summary)
             options.output_stream.puts(output)
           end
 
         options.input_stream.each do |input|
-          game = Serialization::GameDeserializer.perform(input)
+          game = Serialization::GameDeserializer.deserialize(input)
           processor.ingest(game)
         rescue Serialization::DeserializationError => ex
-          # TODO: Just `warn` this `game` and continue.
+          # TODO: Just `warn` this `input` and continue.
         end
 
         processor.emit

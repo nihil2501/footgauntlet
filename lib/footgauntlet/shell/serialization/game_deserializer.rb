@@ -12,7 +12,7 @@ module Footgauntlet
         TEAM_REGEX = /^([a-zA-Z\s]+)\s+(\d+)\s*$/
 
         class << self
-          def perform(game)
+          def deserialize(game)
             team_scores =
               game.split(",").map! do |team|
                 match = team.match(TEAM_REGEX)

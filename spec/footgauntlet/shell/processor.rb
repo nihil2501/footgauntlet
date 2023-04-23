@@ -7,24 +7,37 @@ end
 
 # frozen_string_literal: true
 
-require "footgauntlet/shell/processor"
+require "footgauntlet/shell"
 
-class Options
+module OptionsMock
   DIR = File.expand_path("../../fixtures", __dir__)
 
-  def input_stream
-    @input_stream ||= open_file("input.txt", "r")
-  end
+  class << self
+    def input_stream
+      @input_stream ||= open_file("input.txt", "r")
+    end
 
-  def output_stream
-    @output_stream ||= open_file("output-actual.txt", "w")
-  end
+    def output_stream
+      @output_stream ||= open_file("output-actual.txt", "w")
+    end
 
-  def open_file(name, mode)
-    path = File.expand_path(name, DIR)
-    File.open(path, mode)
+    def open_file(name, mode)
+      path = File.expand_path(name, DIR)
+      File.open(path, mode)
+    end
   end
 end
 
-options = Options.new
-Footgauntlet::Shell::Processor.start(options)
+module Footgauntlet
+  module Shell
+    class Options
+      class << self
+        def parse!
+          OptionsMock
+        end
+      end
+    end
+  end
+end
+
+Footgauntlet::Shell.start

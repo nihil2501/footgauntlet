@@ -2,7 +2,7 @@
 
 require "utils/configuration_factory"
 
-# https://en.wikipedia.org/wiki/Ranking#Standard_competition_ranking_(%221224%22_ranking)
+# https://web.archive.org/web/20230421144050/https://en.wikipedia.org/wiki/Ranking#Standard_competition_ranking_(%221224%22_ranking)
 module Ranking
   Configuration =
     ConfigurationFactory.create(
@@ -19,9 +19,9 @@ module Ranking
       max_args = [config.top_count].compact
 
       els =
-        config.enumerable.max(*max_args) do |a, b|
-          memo = config.compare.(a, b)
-          memo = config.inner_compare.(a, b) if memo.zero?
+        config.enumerable.max(*max_args) do
+          memo = config.compare.(_1, _2)
+          memo = config.inner_compare.(_1, _2) if memo.zero?
           memo
         end
 

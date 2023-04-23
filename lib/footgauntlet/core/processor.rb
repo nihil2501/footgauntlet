@@ -24,9 +24,6 @@ module Footgauntlet
       def ingest(game)
         emit_summary if @matchday_counter.complete?(game.teams)
         @league_points.award(game)
-      rescue => ex
-        puts ex.backtrace
-        raise ex
       end
 
       def emit
@@ -37,11 +34,6 @@ module Footgauntlet
       private
 
       def emit_summary
-        summary = calculate_summary
-        @emit_callback.(summary)
-      end
-
-      def calculate_summary
         top_ranked_team_points =
           Ranking.generate do |config|
             config.compare = LeagueRanking::COMPARE
@@ -58,10 +50,13 @@ module Footgauntlet
               end
           end
 
-        Models::MatchdayLeagueSummary.new(
-          matchday_number: @matchday_counter.value,
-          top_ranked_team_points:,
-        )
+        summary =
+          Models::MatchdayLeagueSummary.new(
+            matchday_number: @matchday_counter.value,
+            top_ranked_team_points:,
+          )
+
+        @emit_callback.(summary)
       end
     end
   end

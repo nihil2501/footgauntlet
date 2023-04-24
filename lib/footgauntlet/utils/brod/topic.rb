@@ -11,8 +11,11 @@ module Brod
       end
     end
 
+    attr_reader :name
+
     def initialize(name)
-      @subscriptions = self.class.subscriptions[name]
+      @name = name
+      @subscriptions = self.class.subscriptions[@name]
     end
 
     def subscribe(&subscription)

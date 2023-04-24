@@ -23,5 +23,9 @@ module Brod
     def stop
       @stopped = true
     end
+
+    def topic_name
+      @topic.name
+    end
   end
 end

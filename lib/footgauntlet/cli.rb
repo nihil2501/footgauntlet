@@ -3,36 +3,50 @@
 require "footgauntlet/cli/exit"
 require "footgauntlet/cli/options"
 require "footgauntlet/core/streams/league_summary_stream"
-require "footgauntlet/utils/pubsub"
+require "footgauntlet/utils/brod/consumer"
+require "footgauntlet/utils/brod/producer"
 
 module Footgauntlet
   module CLI
     class << self
       def start
         options = Options.parse!
-
         Footgauntlet.configure do |config|
-          if options.log_file
-            config.logdev = options.log_file
-          end
-
-          if options.verbose
-            config.log_level = Logger::INFO
-          end
+          config.logdev = options.log_file if options.log_file
+          config.log_level = Logger::INFO if options.verbose
         end
 
         stream = Core::LeagueSummaryStream
-        stream.start
 
-        Pubsub.subscribe(stream.sink_topic) do |record|
-          options.output_stream.puts(record)
-        end
+        consume =
+          lambda do |record|
+            options.output_stream.puts(record)
+          end
+
+        consumer =
+          Brod::Consumer.new(
+            stream.sink_topic_name,
+            :itself.to_proc, -> {},
+            &consume
+          )
+
+        producer =
+          Brod::Producer.new(
+            stream.source_topic_name,
+            :itself.to_proc
+          )
+
+        stream.start
+        consumer.start
+        producer.start
 
         options.input_stream.each do |record|
-          Pubsub.publish(stream.source_topic, record)
+          producer.produce(record)
         end
 
+        producer.stop
         stream.stop
+        consumer.stop
 
         Exit.success
       rescue Error => ex

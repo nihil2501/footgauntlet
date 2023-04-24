@@ -9,9 +9,9 @@ module Brod
     Configuration =
       ConfigurationFactory.create(
         :processor,
-        :source_topic,
+        :source_topic_name,
         :source_deserializer,
-        :sink_topic,
+        :sink_topic_name,
         :sink_serializer,
         on_source_deserialization_error: -> { raise _1 },
         emit_on_stop: false,
@@ -23,7 +23,7 @@ module Brod
 
       @producer =
         Producer.new(
-          config.sink_topic,
+          config.sink_topic_name,
           config.sink_serializer,
         )
 
@@ -34,7 +34,7 @@ module Brod
 
       @consumer =
         Consumer.new(
-          config.source_topic,
+          config.source_topic_name,
           config.source_deserializer,
           config.on_source_deserialization_error,
           &@processor.method(:ingest)
@@ -50,6 +50,14 @@ module Brod
       @consumer.stop
       @processor.emit if @emit_on_stop
       @producer.stop
+    end
+
+    def source_topic_name
+      @consumer.topic_name
+    end
+
+    def sink_topic_name
+      @producer.topic_name
     end
   end
 end

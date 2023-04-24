@@ -24,5 +24,9 @@ module Brod
     def stop
       @topic.unsubscribe(&@consume)
     end
+
+    def topic_name
+      @topic.name
+    end
   end
 end

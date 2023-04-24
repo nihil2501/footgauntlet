@@ -14,8 +14,8 @@ module Footgauntlet
         config.processor = LeagueSummaryProcessor
         config.emit_on_stop = true
 
-        config.source_topic = "games"
-        config.sink_topic = "league_summaries"
+        config.source_topic_name = "games"
+        config.sink_topic_name = "league_summaries"
 
         team_regex = /^([a-zA-Z\s]+)\s+(\d+)\s*$/
         config.source_deserializer =
@@ -45,7 +45,9 @@ module Footgauntlet
           end
 
         config.on_source_deserialization_error =
-          Footgauntlet.logger.method(:warn)
+          lambda do |error|
+            Footgauntlet.logger.warn(error)
+          end
 
         config.sink_serializer =
           lambda do |summary|

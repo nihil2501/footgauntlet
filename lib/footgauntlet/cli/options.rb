@@ -1,6 +1,5 @@
 # frozen_sting_literal: true
 
-# Is there any good way to remove dependency on `Exit` in `Options`?
 require "footgauntlet/cli/exit"
 require "footgauntlet/error"
 require "optparse"
@@ -31,8 +30,6 @@ module Footgauntlet
         @parser = OptionParser.new
         @parser.banner = "Usage: footgauntlet [options]"
 
-        # TODO: How to set mode re: recovery? How to do recovery / fault
-        # tolerance in general?
         on_file("input", "r") { @input_stream = _1 }
         on_file("output", "w") { @output_stream = _1 }
         on_file("logs", "w") { @log = _1 }
@@ -55,7 +52,6 @@ module Footgauntlet
           raise ex
         end
 
-        # TODO: Vet tradeoffs of synced vs buffered for each IO.
         @input_stream.sync = true
         @output_stream.sync = true
         @log.sync = true

@@ -3,12 +3,6 @@
 require "footgauntlet/utils/configuration_factory"
 
 # https://web.archive.org/web/20230421144050/https://en.wikipedia.org/wiki/Ranking#Standard_competition_ranking_(%221224%22_ranking)
-# TODO: Motivate API. Particularly initialization vs. `rank` method which
-# implies that the kind of `Ranker` is static, but rather than assume there is
-# also a static mutating collection for which we `rank` multiple times, a new
-# collection is given for each `rank` (yet callers can pass same one multiple
-# times). Should this distinction apply to other parameters as well (like
-# `top_count`)? 
 class Ranker
   Definition =
     ConfigurationFactory.create(

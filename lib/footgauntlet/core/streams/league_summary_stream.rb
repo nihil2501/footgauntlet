@@ -4,19 +4,18 @@ require "footgauntlet/core/models/game"
 require "footgauntlet/core/models/team"
 require "footgauntlet/core/models/team_score"
 require "footgauntlet/core/processors/league_summary_processor"
-require "footgauntlet/utils/stream"
+require "footgauntlet/utils/brod/stream"
+require "footgauntlet/utils/brod/consumer"
 
 module Footgauntlet
   module Core
     LeagueSummaryStream =
-      Stream.new do |config|
+      Brod::Stream.new do |config|
         config.processor = LeagueSummaryProcessor
+        config.emit_on_stop = true
 
         config.source_topic = "games"
         config.sink_topic = "league_summaries"
-
-        config.skip_deserialization_errors = true
-        config.emit_on_stop = true
 
         team_regex = /^([a-zA-Z\s]+)\s+(\d+)\s*$/
         config.source_deserializer =
@@ -24,7 +23,7 @@ module Footgauntlet
             team_scores =
               game.split(",").map! do |team|
                 match = team.match(team_regex)
-                raise Stream::DeserializationError if match.nil?
+                raise Brod::Consumer::DeserializationError if match.nil?
 
                 team_name, score = match.captures
                 team = Team.new(name: team_name.strip)
@@ -36,7 +35,7 @@ module Footgauntlet
                 )
               end
 
-            raise Stream::DeserializationError if team_scores.size != 2
+            raise Brod::Consumer::DeserializationError if team_scores.size != 2
             home_score, away_score = team_scores
 
             Game.new(
@@ -44,6 +43,9 @@ module Footgauntlet
               away_score:,
             )
           end
+
+        config.on_source_deserialization_error =
+          Footgauntlet.logger.method(:warn)
 
         config.sink_serializer =
           lambda do |summary|

@@ -18,8 +18,8 @@ class Ranker
   def rank(enumerable, count = nil)
     els =
       enumerable.max(*[count].compact) do
-        memo = @definition.compare.(_1, _2)
-        memo = @definition.inner_compare.(_1, _2) if memo.zero?
+        memo = @definition.compare.call(_1, _2)
+        memo = @definition.inner_compare.call(_1, _2) if memo.zero?
         memo
       end
 
@@ -28,11 +28,11 @@ class Ranker
 
     els.map! do |el|
       outranked = !previous_el.nil?
-      outranked &&= @definition.compare.(el, previous_el).negative?
+      outranked &&= @definition.compare.call(el, previous_el).negative?
       rank += 1 if outranked
 
       previous_el = el
-      @definition.map.(el, rank)
+      @definition.map.call(el, rank)
     end
   end
 end

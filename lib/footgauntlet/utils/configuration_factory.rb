@@ -4,13 +4,8 @@ module ConfigurationFactory
   class << self
     def create(*required, **optional)
       Class.new do |klass|
-        klass.const_set(:Error,
-          error_klass = Class.new(RuntimeError)
-        )
-
-        
         klass.const_set(:MissingRequiredAttributesError,
-          missing_attrs_error_klass = Class.new(error_klass)
+          missing_attrs_error_klass = Class.new(RuntimeError)
         )
 
         required.each do |attr|
@@ -34,7 +29,7 @@ module ConfigurationFactory
 
         define_method(:initialize) do |&block|
           @missing_attrs = required.to_set
-          block.(self)
+          block.call(klass)
 
           unless @missing_attrs.empty?
             error_message = "missing attrs: #{@missing_attrs.join(", ")}"

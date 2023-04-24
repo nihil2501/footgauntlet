@@ -51,7 +51,7 @@ module Footgauntlet
         ranking = @ranker.rank(@league_points, Ranking::COUNT)
         summary = LeagueSummary.new(matchday_number:, ranking:)
 
-        @on_emit.(summary)
+        @on_emit.call(summary)
       end
 
       class LeaguePoints

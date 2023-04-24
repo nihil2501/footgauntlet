@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "utils/configuration_factory"
+require "footgauntlet/utils/configuration_factory"
 
 # https://web.archive.org/web/20230421144050/https://en.wikipedia.org/wiki/Ranking#Standard_competition_ranking_(%221224%22_ranking)
 # TODO: Motivate API. Particularly initialization vs. `rank` method which

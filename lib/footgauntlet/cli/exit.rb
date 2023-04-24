@@ -1,10 +1,10 @@
 # frozen_sting_literal: true
 
 require "footgauntlet/error"
-require "footgauntlet/shell/options"
+require "footgauntlet/cli/options"
 
 module Footgauntlet
-  module Shell
+  module CLI
     module Exit
       class << self
         def success

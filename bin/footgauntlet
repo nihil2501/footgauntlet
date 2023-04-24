@@ -7,4 +7,4 @@ end
 
 require "footgauntlet"
 
-Footgauntlet::Shell.start
+Footgauntlet::CLI.start

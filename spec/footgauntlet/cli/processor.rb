@@ -7,7 +7,7 @@ end
 
 # frozen_string_literal: true
 
-require "footgauntlet/shell"
+require "footgauntlet/cli"
 
 module OptionsMock
   DIR = File.expand_path("../../fixtures", __dir__)
@@ -29,7 +29,7 @@ module OptionsMock
 end
 
 module Footgauntlet
-  module Shell
+  module CLI
     class Options
       class << self
         def parse!
@@ -40,4 +40,4 @@ module Footgauntlet
   end
 end
 
-Footgauntlet::Shell.start
+Footgauntlet::CLI.start

@@ -2,12 +2,10 @@
 
 module Footgauntlet
   module Core
-    module Models
-      TeamScore =
-        Data.define(
-          :team,
-          :score
-        )
-    end
+    TeamScore =
+      Data.define(
+        :team,
+        :score
+      )
   end
 end

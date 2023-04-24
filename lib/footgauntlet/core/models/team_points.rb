@@ -2,18 +2,16 @@
 
 module Footgauntlet
   module Core
-    module Models
-      class TeamPoints
-        attr_reader :team, :points
+    class TeamPoints
+      attr_reader :team, :points
 
-        def initialize(team:)
-          @team = team
-          @points = 0
-        end
+      def initialize(team:)
+        @team = team
+        @points = 0
+      end
 
-        def award(value)
-          @points += value
-        end
+      def award(value)
+        @points += value
       end
     end
   end

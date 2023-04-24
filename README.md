@@ -8,3 +8,8 @@
 * template (+ inverse)
 * use numbered block args
 * rename matchday things?
+* logger debug and --verbose log level?
+
+#### Stream Processing
+* topology(?) allows to register processor with input and output topics
+* topics in turn have serde

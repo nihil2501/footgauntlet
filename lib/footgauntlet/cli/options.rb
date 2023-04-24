@@ -1,12 +1,12 @@
 # frozen_sting_literal: true
 
 # Is there any good way to remove dependency on `Exit` in `Options`?
-require "footgauntlet/shell/exit"
+require "footgauntlet/cli/exit"
 require "footgauntlet/error"
 require "optparse"
 
 module Footgauntlet
-  module Shell
+  module CLI
     class Options
       OptionsError = Class.new(Error)
       DuplicateFilePathError = Class.new(OptionsError)

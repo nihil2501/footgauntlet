@@ -2,12 +2,10 @@
 
 module Footgauntlet
   module Core
-    module Models
-      LeagueSummary =
-        Data.define(
-          :matchday_number,
-          :ranking,
-        )
-    end
+    LeagueSummary =
+      Data.define(
+        :matchday_number,
+        :ranking,
+      )
   end
 end

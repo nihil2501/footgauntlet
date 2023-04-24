@@ -37,7 +37,7 @@ module Brod
           config.source_topic,
           config.source_deserializer,
           config.on_source_deserialization_error,
-          &@processor.method(:ingest),
+          &@processor.method(:ingest)
         )
     end
 

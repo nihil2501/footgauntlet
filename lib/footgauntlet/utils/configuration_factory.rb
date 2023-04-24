@@ -29,7 +29,7 @@ module ConfigurationFactory
 
         define_method(:initialize) do |&block|
           @missing_attrs = required.to_set
-          block.call(klass)
+          block.call(self)
 
           unless @missing_attrs.empty?
             error_message = "missing attrs: #{@missing_attrs.join(", ")}"

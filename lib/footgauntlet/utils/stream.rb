@@ -14,7 +14,8 @@ class Stream
       :source_deserializer,
       :sink_topic,
       :sink_serializer,
-      emit_on_stop: false
+      skip_deserialization_errors: false,
+      emit_on_stop: false,
     )
 
   def initialize(&)
@@ -29,6 +30,9 @@ class Stream
       # TODO: Just `warn` this `record` and continue. For this I may need to
       # allow this library to get hooked up with a logger. Is pubsub yet another
       # library that should be able to get hooked up with a logger?
+      unless @config.skip_deserialization_errors
+        raise ex
+      end
     end
   end
 

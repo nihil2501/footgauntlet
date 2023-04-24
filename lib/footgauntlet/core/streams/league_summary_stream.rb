@@ -11,8 +11,11 @@ module Footgauntlet
     LeagueSummaryStream =
       Stream.new do |config|
         config.processor = LeagueSummaryProcessor
+
         config.source_topic = "games"
         config.sink_topic = "league_summaries"
+
+        config.skip_deserialization_errors = true
         config.emit_on_stop = true
 
         team_regex = /^([a-zA-Z\s]+)\s+(\d+)\s*$/

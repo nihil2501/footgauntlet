@@ -1,7 +1,6 @@
 # frozen_sting_literal: true
 
 require "footgauntlet/cli/exit"
-require "footgauntlet/error"
 require "optparse"
 
 module Footgauntlet
@@ -19,20 +18,25 @@ module Footgauntlet
       attr_reader(
         :input_stream,
         :output_stream,
-        :log,
+        :log_file,
+        :verbose,
       )
 
       def initialize
         @input_stream = STDIN
         @output_stream = STDOUT
-        @log = STDERR
+        @verbose = false
 
         @parser = OptionParser.new
         @parser.banner = "Usage: footgauntlet [options]"
 
         on_file("input", "r") { @input_stream = _1 }
         on_file("output", "w") { @output_stream = _1 }
-        on_file("logs", "w") { @log = _1 }
+        on_file("logs", "w") { @log_file = _1 }
+
+        @parser.on("-v", "--verbose", "Run verbosely") do
+          @verbose = true
+        end
 
         @parser.on("-h", "--help", "Prints this help message") do
           STDERR.puts @parser
@@ -54,7 +58,6 @@ module Footgauntlet
 
         @input_stream.sync = true
         @output_stream.sync = true
-        @log.sync = true
       end
 
       private

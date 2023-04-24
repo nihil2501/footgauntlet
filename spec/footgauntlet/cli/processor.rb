@@ -7,7 +7,7 @@ end
 
 # frozen_string_literal: true
 
-require "footgauntlet/cli"
+require "footgauntlet"
 
 module OptionsMock
   DIR = File.expand_path("../../fixtures", __dir__)
@@ -19,6 +19,14 @@ module OptionsMock
 
     def output_stream
       @output_stream ||= open_file("output-actual.txt", "w")
+    end
+
+    def log_file
+      nil
+    end
+
+    def verbose
+      false
     end
 
     def open_file(name, mode)

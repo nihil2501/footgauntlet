@@ -2,14 +2,32 @@
 
 Encoding.default_external = Encoding::UTF_8
 
-require "footgauntlet/logging"
+require "footgauntlet/utils/configuration_factory"
+require "logger"
 
 module Footgauntlet
   autoload :CLI, "footgauntlet/cli"
 
+  Error = Class.new(RuntimeError)
+
+  Configuration =
+    ConfigurationFactory.create(
+      log_level: Logger::WARN,
+      logdev: STDERR,
+    )
+
   class << self
-    def logger
-      Footgauntlet::Logging.logger
+    attr_reader :logger
+
+    def configure(&)
+      config = Configuration.new(&)
+
+      @logger =
+        Logger.new(
+          config.logdev,
+          level: config.log_level,
+          progname: "Footgauntlet"
+        )
     end
   end
 end

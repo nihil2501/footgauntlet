@@ -1,6 +1,5 @@
 # frozen_sting_literal: true
 
-require "footgauntlet/error"
 require "footgauntlet/cli/exit"
 require "footgauntlet/cli/options"
 require "footgauntlet/core/streams/league_summary_stream"
@@ -11,6 +10,16 @@ module Footgauntlet
     class << self
       def start
         options = Options.parse!
+
+        Footgauntlet.configure do |config|
+          if options.log_file
+            config.logdev = options.log_file
+          end
+
+          if options.verbose
+            config.log_level = Logger::INFO
+          end
+        end
 
         stream = Core::LeagueSummaryStream
         stream.start
@@ -27,7 +36,7 @@ module Footgauntlet
 
         Exit.success
       rescue Error => ex
-        STDERR.puts "Error: #{ex.message}"
+        Footgauntlet.logger.fatal "Error: #{ex.message}"
         Exit.error(ex)
       end
     end

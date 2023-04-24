@@ -1,6 +1,5 @@
 # frozen_sting_literal: true
 
-require "footgauntlet/error"
 require "footgauntlet/cli/options"
 
 module Footgauntlet
@@ -14,7 +13,7 @@ module Footgauntlet
         def error(ex)
           code =
             case ex
-            when OptionsError
+            when Options::OptionsError
               2
             when Error
               1

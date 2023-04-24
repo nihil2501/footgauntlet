@@ -4,6 +4,17 @@ require "footgauntlet/utils/read_only_struct"
 
 module Footgauntlet
   module Core
+    # This receives its `hash` function from `Data`. It is a pure
+    # calculation of its `members`' `hash` functions, which is exactly what
+    # we want.
+    Team = Data.define(:name)
+
+    TeamScore =
+      Data.define(
+        :team,
+        :score
+      )
+
     # This doesn't quite work with Ruby's builtin `Data` because we're doing
     # memoization with instance variables but `Data` objects are frozen.
     class Game < ReadOnlyStruct.new(:home_score, :away_score)
@@ -47,5 +58,34 @@ module Footgauntlet
         end
       end
     end
+
+    class TeamPoints
+      attr_reader :team, :points
+
+      def initialize(team:)
+        @team = team
+        @points = 0
+      end
+
+      def award(value)
+        @points += value
+      end
+    end
+
+    class RankedTeamPoints
+      attr_reader :team, :points, :rank
+
+      def initialize(team_points:, rank:)
+        @team = team_points.team
+        @points = team_points.points
+        @rank = rank
+      end
+    end
+
+    LeagueSummary =
+      Data.define(
+        :matchday_number,
+        :ranking,
+      )
   end
 end

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require "footgauntlet/core/models/league_summary"
-require "footgauntlet/core/models/ranked_team_points"
+require "footgauntlet/core/models"
 require "footgauntlet/utils/bucket_counter"
 require "footgauntlet/utils/ranker"
 

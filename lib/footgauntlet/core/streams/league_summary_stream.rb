@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require "footgauntlet/core/models/game"
-require "footgauntlet/core/models/team"
-require "footgauntlet/core/models/team_score"
+require "footgauntlet/core/models"
 require "footgauntlet/core/processors/league_summary_processor"
 require "footgauntlet/utils/brod/stream"
 require "footgauntlet/utils/brod/consumer"

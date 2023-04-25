@@ -26,7 +26,7 @@ module OptionsMock
     end
 
     def verbose
-      false
+      true
     end
 
     def open_file(name, mode)

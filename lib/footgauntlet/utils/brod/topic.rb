@@ -27,6 +27,12 @@ module Brod
     end
 
     def publish(record)
+      Brod.logger.info({
+        brod: "publish",
+        topic: self.name,
+        record: record.strip,
+      })
+
       @subscriptions.each do |subscription|
         subscription.call(record)
       end

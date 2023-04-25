@@ -3,8 +3,7 @@
 require "footgauntlet/cli/exit"
 require "footgauntlet/cli/options"
 require "footgauntlet/core/streams/league_summary_stream"
-require "footgauntlet/utils/brod/consumer"
-require "footgauntlet/utils/brod/producer"
+require "footgauntlet/utils/brod"
 
 module Footgauntlet
   module CLI

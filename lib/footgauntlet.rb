@@ -1,7 +1,5 @@
 # frozen_sting_literal: true
 
-Encoding.default_external = Encoding::UTF_8
-
 require "footgauntlet/utils/brod"
 require "footgauntlet/utils/configuration_factory"
 require "logger"
@@ -44,9 +42,9 @@ module Footgauntlet
 
         @logger =
           Logger.new(STDERR,
+            level: Logger::WARN,
             progname:,
             formatter:,
-            level:,
           )
 
         Brod.logger = @logger

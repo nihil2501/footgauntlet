@@ -22,7 +22,7 @@ module Brod
       @emit_on_stop = config.emit_on_stop
       # Pretty unsure if there are subtle sequencing bugs here in the face of
       # signal traps or exceptions that cause program control to jump. 
-      @stopped = false
+      @stopped = true
 
       @producer =
         Producer.new(

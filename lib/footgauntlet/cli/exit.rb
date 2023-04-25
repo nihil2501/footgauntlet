@@ -1,7 +1,5 @@
 # frozen_sting_literal: true
 
-require "footgauntlet/cli/options"
-
 module Footgauntlet
   class CLI
     module Exit

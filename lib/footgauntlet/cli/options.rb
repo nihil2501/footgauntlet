@@ -1,6 +1,5 @@
 # frozen_sting_literal: true
 
-require "footgauntlet/cli/exit"
 require "optparse"
 
 module Footgauntlet

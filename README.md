@@ -1,3 +1,5 @@
 ### TODO
-* executable
-* specs, design docs, comments
+* specs
+* comments
+* executables
+* readme

@@ -13,7 +13,7 @@ module Brod
         :source_deserializer,
         :sink_topic_name,
         :sink_serializer,
-        on_source_deserialization_error: -> { raise _1 },
+        on_deserialization_error: -> { raise _1 },
         emit_on_stop: false,
       )
 
@@ -21,7 +21,7 @@ module Brod
       config = Configuration.new(&)
       @emit_on_stop = config.emit_on_stop
       # Pretty unsure if there are subtle sequencing bugs here in the face of
-      # signal traps or exceptions that cause program control to jump. 
+      # signal traps or exceptions that cause control flow to jump. 
       @stopped = true
 
       @producer =
@@ -30,17 +30,16 @@ module Brod
           config.sink_serializer,
         )
 
-      @processor =
-        config.processor.new(
-          &@producer.method(:produce)
-        )
+      produce = @producer.method(:produce)
+      @processor = config.processor.new(produce)
 
+      consume = @processor.method(:ingest)
       @consumer =
         Consumer.new(
           config.source_topic_name,
           config.source_deserializer,
-          config.on_source_deserialization_error,
-          &@processor.method(:ingest)
+          config.on_deserialization_error,
+          consume
         )
     end
 

@@ -42,7 +42,7 @@ module Footgauntlet
             )
           end
 
-        config.on_source_deserialization_error =
+        config.on_deserialization_error =
           lambda do |error|
             Footgauntlet.logger.warn(error)
           end

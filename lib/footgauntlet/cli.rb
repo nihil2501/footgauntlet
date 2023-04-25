@@ -26,7 +26,7 @@ module Footgauntlet
         Brod::Consumer.new(
           @stream.sink_topic_name,
           :itself.to_proc, -> {},
-          &consume
+          consume
         )
 
       @producer =

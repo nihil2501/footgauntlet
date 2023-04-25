@@ -25,7 +25,7 @@ describe Footgauntlet::CLI do
         end
       end
 
-    it "produces the specified output stream" do
+    it "produces the expected output stream" do
       Footgauntlet::CLI::Exit.stub(:success, options) do
         Footgauntlet::CLI::Options.stub(:parse!, options) do
           Footgauntlet::CLI.new.run

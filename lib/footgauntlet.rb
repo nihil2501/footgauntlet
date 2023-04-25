@@ -27,7 +27,7 @@ module Footgauntlet
         progname = self.name
         base_formatter = Logger::Formatter.new
         formatter =
-          Proc.new do |*args, message|
+          lambda do |*args, message|
             if message.respond_to?(:to_h)
               # 1-level deep `to_json`.
               message = message.to_h.map { |k, v| %{"#{k}": "#{v}"} }

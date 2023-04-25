@@ -18,11 +18,11 @@ module Brod
       @subscriptions = self.class.subscriptions[@name]
     end
 
-    def subscribe(&subscription)
+    def subscribe(subscription)
       @subscriptions << subscription
     end
 
-    def unsubscribe(&subscription)
+    def unsubscribe(subscription)
       @subscriptions.delete(subscription)
     end
 

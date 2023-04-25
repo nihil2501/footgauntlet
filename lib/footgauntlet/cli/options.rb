@@ -25,6 +25,7 @@ module Footgauntlet
       def initialize
         @input_stream = STDIN
         @output_stream = STDOUT
+        @log_file = nil
         @verbose = false
 
         @parser = OptionParser.new

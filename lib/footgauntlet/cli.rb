@@ -1,6 +1,5 @@
 # frozen_sting_literal: true
 
-require "footgauntlet/cli/exit"
 require "footgauntlet/cli/options"
 require "footgauntlet/core/streams/league_summary_stream"
 require "footgauntlet/utils/brod/consumer"
@@ -52,6 +51,26 @@ module Footgauntlet
       rescue Error => ex
         Footgauntlet.logger.fatal "Error: #{ex.message}"
         Exit.error(ex)
+      end
+    end
+
+    module Exit
+      class << self
+        def success
+          exit(0)
+        end
+
+        def error(ex)
+          code =
+            case ex
+            when Options::OptionsError
+              2
+            when Error
+              1
+            end
+
+          exit(code)
+        end
       end
     end
   end

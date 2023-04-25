@@ -2,7 +2,8 @@
 
 require "footgauntlet/core/models"
 require "footgauntlet/core/processors/league_summary_processor"
-require "footgauntlet/utils/brod"
+require "footgauntlet/utils/brod/stream"
+require "footgauntlet/utils/brod/consumer"
 
 module Footgauntlet
   module Core

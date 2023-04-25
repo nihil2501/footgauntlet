@@ -3,7 +3,7 @@
 require "footgauntlet/cli/options"
 
 module Footgauntlet
-  module CLI
+  class CLI
     module Exit
       class << self
         def success

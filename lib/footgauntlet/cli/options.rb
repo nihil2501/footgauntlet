@@ -4,7 +4,7 @@ require "footgauntlet/cli/exit"
 require "optparse"
 
 module Footgauntlet
-  module CLI
+  class CLI
     class Options
       OptionsError = Class.new(Error)
       DuplicateFilePathError = Class.new(OptionsError)

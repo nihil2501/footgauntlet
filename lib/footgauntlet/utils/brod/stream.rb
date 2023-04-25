@@ -20,6 +20,9 @@ module Brod
     def initialize(&)
       config = Configuration.new(&)
       @emit_on_stop = config.emit_on_stop
+      # Pretty unsure if there are subtle sequencing bugs here in the face of
+      # signal traps or exceptions that cause program control to jump. 
+      @stopped = false
 
       @producer =
         Producer.new(
@@ -42,11 +45,17 @@ module Brod
     end
 
     def start
+      return unless @stopped
+      @stopped = false
+
       @producer.start
       @consumer.start
     end
 
     def stop
+      return if @stopped
+      @stopped = true
+
       @consumer.stop
       @processor.emit if @emit_on_stop
       @producer.stop

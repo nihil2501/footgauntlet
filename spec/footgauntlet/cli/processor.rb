@@ -37,7 +37,7 @@ module OptionsMock
 end
 
 module Footgauntlet
-  module CLI
+  class CLI
     class Options
       class << self
         def parse!
@@ -48,4 +48,4 @@ module Footgauntlet
   end
 end
 
-Footgauntlet::CLI.start
+Footgauntlet::CLI.new.run

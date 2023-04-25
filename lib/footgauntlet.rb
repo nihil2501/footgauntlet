@@ -17,49 +17,41 @@ module Footgauntlet
       :verbose,
     )
 
-  DEFAULT_LOG_LEVEL = Logger::WARN
-
   class << self
     def configure(&)
       config = Configuration.new(&)
-      log_level = config.verbose ? Logger::INFO : DEFAULT_LOG_LEVEL
-
-      if config.log_file.nil?
-        logger.level = log_level
-      else
-        set_logger(config.log_file, log_level)
-      end
+      logger.level = config.verbose ? Logger::INFO : Logger::WARN
+      logger.reopen(config.log_file)
     end
 
     def logger
-      @logger ||= set_logger
-    end
+      if @logger.nil?
+        progname = self.name
+        base_formatter = Logger::Formatter.new
+        formatter =
+          Proc.new do |*args, message|
+            if message.respond_to?(:to_h)
+              # 1-level deep `to_json`.
+              message = message.to_h.map { |k, v| %{"#{k}": "#{v}"} }
+              message = %{{ #{message.join(", ")} }}
+            end
 
-    def set_logger(logdev = STDERR, level = DEFAULT_LOG_LEVEL)
-      @logger_formatter ||= begin
-        base = Logger::Formatter.new
-        Proc.new do |*args, message|
-          if message.respond_to?(:to_h)
-            # 1-level deep `to_json`.
-            message = message.to_h.map { |k, v| %{"#{k}": "#{v}"} }
-            message = %{{ #{message.join(", ")} }}
+            base_formatter.call(
+              *args,
+              message
+            )
           end
 
-          base.call(
-            *args,
-            message
+        @logger =
+          Logger.new(STDERR,
+            progname:,
+            formatter:,
+            level:,
           )
-        end
+
+        Brod.logger = @logger
       end
 
-      @logger =
-        Logger.new(logdev,
-          formatter: @logger_formatter,
-          progname: self.name,
-          level:,
-        )
-
-      Brod.logger = @logger
       @logger
     end
   end

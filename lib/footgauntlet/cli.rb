@@ -12,8 +12,8 @@ module Footgauntlet
       def start
         options = Options.parse!
         Footgauntlet.configure do |config|
-          config.logdev = options.log_file if options.log_file
-          config.log_level = Logger::INFO if options.verbose
+          config.log_file = options.log_file
+          config.verbose = options.verbose
         end
 
         stream = Core::LeagueSummaryStream

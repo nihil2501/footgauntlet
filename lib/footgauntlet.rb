@@ -13,40 +13,54 @@ module Footgauntlet
 
   Configuration =
     ConfigurationFactory.create(
-      log_level: Logger::WARN,
-      logdev: STDERR,
+      :log_file,
+      :verbose,
     )
 
-  class << self
-    attr_reader :logger
+  DEFAULT_LOG_LEVEL = Logger::WARN
 
+  class << self
     def configure(&)
       config = Configuration.new(&)
-      base_formatter = Logger::Formatter.new
+      log_level = config.verbose ? Logger::INFO : DEFAULT_LOG_LEVEL
 
-      formatter =
+      if config.log_file.nil?
+        logger.level = log_level
+      else
+        set_logger(config.log_file, log_level)
+      end
+    end
+
+    def logger
+      @logger ||= set_logger
+    end
+
+    def set_logger(logdev = STDERR, level = DEFAULT_LOG_LEVEL)
+      @logger_formatter ||= begin
+        base = Logger::Formatter.new
         Proc.new do |*args, message|
           if message.respond_to?(:to_h)
             # 1-level deep `to_json`.
-            message = message.to_h.map { |k, v| %{"#{k}": "#{v}"}}
+            message = message.to_h.map { |k, v| %{"#{k}": "#{v}"} }
             message = %{{ #{message.join(", ")} }}
           end
 
-          base_formatter.call(
+          base.call(
             *args,
             message
           )
         end
+      end
 
       @logger =
-        Logger.new(
-          config.logdev,
-          level: config.log_level,
-          progname: "Footgauntlet",
-          formatter:,
+        Logger.new(logdev,
+          formatter: @logger_formatter,
+          progname: self.name,
+          level:,
         )
 
       Brod.logger = @logger
+      @logger
     end
   end
 end

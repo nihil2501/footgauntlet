@@ -8,10 +8,9 @@ module Brod
 
     def logger
       @logger ||=
-        Logger.new(
-          STDERR,
+        Logger.new(STDERR,
           level: Logger::WARN,
-          progname: "Brod"
+          progname: "Brod",
         )
     end
   end

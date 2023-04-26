@@ -4,6 +4,9 @@ require "brod_helper"
 require "footgauntlet"
 require "minitest/pride"
 
+# Suppress logger output in specs.
+Footgauntlet.logger.reopen(File::NULL)
+
 module Fixture
   class << self
     def open(name)

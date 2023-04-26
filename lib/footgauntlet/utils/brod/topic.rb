@@ -9,6 +9,10 @@ module Brod
             memo[topic] = []
           end
       end
+
+      def clear
+        @subscriptions = nil
+      end
     end
 
     attr_reader :name

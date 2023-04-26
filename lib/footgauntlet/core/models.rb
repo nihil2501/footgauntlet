@@ -70,6 +70,12 @@ module Footgauntlet
       def award(value)
         @points += value
       end
+
+      def ==(other)
+        other.is_a?(TeamPoints) &&
+          self.team == other.team &&
+          self.points == other.points
+      end
     end
 
     class RankedTeamPoints
@@ -79,6 +85,13 @@ module Footgauntlet
         @team = team_points.team
         @points = team_points.points
         @rank = rank
+      end
+
+      def ==(other)
+        other.is_a?(RankedTeamPoints) &&
+          self.team == other.team &&
+          self.points == other.points &&
+          self.rank == other.rank
       end
     end
 

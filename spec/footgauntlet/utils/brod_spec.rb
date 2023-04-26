@@ -4,21 +4,6 @@ require "footgauntlet/utils/brod/stream"
 require "spec_helper"
 
 describe Brod do
-  def producer_config(topic)
-    Object.new.tap do |config|
-      config.define_singleton_method(:topic_name) { topic }
-      config.define_singleton_method(:serialize, &:itself)
-    end
-  end
-
-  def consumer_config(topic)
-    Object.new.tap do |config|
-      config.define_singleton_method(:topic_name) { topic }
-      config.define_singleton_method(:deserialize, &:itself)
-      config.define_singleton_method(:handle_deserialization_error, &:itself)
-    end
-  end
-
   class Processor
     def initialize(&on_emit)
       @on_emit = on_emit
@@ -28,14 +13,6 @@ describe Brod do
       @on_emit.call(record ** 2)
     end
   end
-
-  stream_config =
-    Object.new.tap do |config|
-      class << config
-        def processor = Processor
-        def emit_on_stop = false
-      end
-    end
 
   before do
     @source = [1,2,3,4,5]
@@ -49,6 +26,14 @@ describe Brod do
     @producer = Brod::Producer.new(producer_config("source"))
     @producer.start
     consumer.start
+
+    stream_config =
+      Object.new.tap do |config|
+        class << config
+          def processor = Processor
+          def emit_on_stop = false
+        end
+      end
 
     Brod::Stream.new(
       stream_config,
@@ -85,5 +70,20 @@ describe Brod do
       [1, 1, 16, 16, 81, 81, 256, 256, 625, 625].sort!,
       @sink.sort!
     )
+  end
+
+  def producer_config(topic)
+    Object.new.tap do |config|
+      config.define_singleton_method(:topic_name) { topic }
+      config.define_singleton_method(:serialize, &:itself)
+    end
+  end
+
+  def consumer_config(topic)
+    Object.new.tap do |config|
+      config.define_singleton_method(:topic_name) { topic }
+      config.define_singleton_method(:deserialize, &:itself)
+      config.define_singleton_method(:handle_deserialization_error, &:itself)
+    end
   end
 end

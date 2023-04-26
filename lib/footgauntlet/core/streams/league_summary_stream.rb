@@ -43,7 +43,7 @@ module Footgauntlet
               team_scores =
                 game.split(",").map! do |team|
                   match = team.match(TEAM_REGEX)
-                  raise Brod::Consumer::DeserializationError if match.nil?
+                  raise Brod::Consumer::DeserializationError, game if match.nil?
 
                   team_name, score = match.captures
                   team = Team.new(name: team_name.strip)
@@ -55,7 +55,7 @@ module Footgauntlet
                   )
                 end
 
-              raise Brod::Consumer::DeserializationError if team_scores.size != 2
+              raise Brod::Consumer::DeserializationError, game if team_scores.size != 2
               home_score, away_score = team_scores
 
               Game.new(

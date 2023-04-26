@@ -19,6 +19,19 @@ module Footgauntlet
       end
 
       def emit
+        # What if `emit` is invoked when no games ingested because the enclosing
+        # process feeds in the empty feed? The ambiguous semantics of this are
+        # discussed in the spec suite for this class.
+        #
+        # The alternative is to prepend in this method body the statement:
+        #   `return if @league_points.empty?`
+        #
+        # Provided that `LeaguePoints` is extended with:
+        #   ```
+        #   def empty?
+        #     tallies.empty?
+        #   end
+        #   ```
         @matchday_counter.complete!
         emit_summary
       end

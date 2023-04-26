@@ -1,0 +1,1 @@
+# spec that deser error logs but continues next

@@ -31,15 +31,24 @@ module Brod
     end
 
     def publish(record)
-      Brod.logger.info({
-        brod: "publish",
-        topic: @name,
-        record: record.inspect.strip,
-      })
+      log_publish(record)
 
       @subscriptions.each do |subscription|
         subscription.call(record)
       end
+    end
+
+    private
+
+    def log_publish(record)
+      message = record.inspect.strip 
+      message = { brod: "publish", topic: @name, record: message }
+
+      # 1-level deep `to_json`.
+      message = message.to_h.map { |k, v| %{"#{k}": "#{v}"} }
+      message = %{{ #{message.join(", ")} }}
+
+      Brod.logger.info(message)
     end
   end
 end

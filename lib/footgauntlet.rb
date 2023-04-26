@@ -23,34 +23,10 @@ module Footgauntlet
     end
 
     def logger
-      if @logger.nil?
-        progname = self.name
-        base_formatter = Logger::Formatter.new
-        formatter =
-          lambda do |*args, msg|
-            if msg.respond_to?(:to_h)
-              # 1-level deep `to_json`.
-              msg = msg.to_h.map { |k, v| %{"#{k}": "#{v}"} }
-              msg = %{{ #{msg.join(", ")} }}
-            end
-
-            base_formatter.call(
-              *args,
-              msg
-            )
-          end
-
-        @logger =
-          Logger.new(STDERR,
-            level: Logger::WARN,
-            progname:,
-            formatter:,
-          )
-
-        Brod.logger = @logger
+      @logger ||= begin
+        memo = Logger.new(STDERR, level: Logger::WARN, progname: name)
+        Brod.logger = memo
       end
-
-      @logger
     end
   end
 end

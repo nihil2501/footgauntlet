@@ -7,11 +7,7 @@ module Brod
     attr_writer :logger
 
     def logger
-      @logger ||=
-        Logger.new(STDERR,
-          level: Logger::WARN,
-          progname: "Brod",
-        )
+      @logger ||= Logger.new(STDERR, level: Logger::WARN, progname: name)
     end
   end
 end

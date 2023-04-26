@@ -19,12 +19,12 @@ describe Ranker do
       @enumerable = 1..9
     end
 
-    describe "with compares specified" do
+    describe "with comparators specified" do
       before do
         @ranker =
           Ranker.new do |definition|
-            definition.compare = -> { _1 / 3 <=> _2 / 3 }
-            definition.inner_compare = -> { _2 <=> _1 }
+            definition.comparator = -> { _1 / 3 <=> _2 / 3 }
+            definition.inner_comparator = -> { _2 <=> _1 }
             definition.map = -> (object, rank) { [rank, object] }
           end
       end
@@ -72,7 +72,7 @@ describe Ranker do
       end
     end
 
-    describe "with compares unspecified" do
+    describe "with comparators unspecified" do
       before do
         @ranker =
           Ranker.new do |definition|
@@ -80,7 +80,7 @@ describe Ranker do
           end
       end
 
-      it "uses trivial compare" do
+      it "uses trivial comparator" do
         expected = [
           [1, 9],
           [2, 8],

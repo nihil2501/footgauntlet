@@ -39,16 +39,16 @@ module Footgauntlet
       private
 
       module Ranking
-        COMPARE = -> { _1.points <=> _2.points }
-        INNER_COMPARE = -> { _2.team.name <=> _1.team.name }
+        COMPARATOR = -> { _1.points <=> _2.points }
+        INNER_COMPARATOR = -> { _2.team.name <=> _1.team.name }
         COUNT = 3
       end
 
       def emit_summary
         @ranker ||=
           Ranker.new do |definition|
-            definition.compare = Ranking::COMPARE
-            definition.inner_compare = Ranking::INNER_COMPARE
+            definition.comparator = Ranking::COMPARATOR
+            definition.inner_comparator = Ranking::INNER_COMPARATOR
 
             definition.map =
               lambda do |team_points, rank|

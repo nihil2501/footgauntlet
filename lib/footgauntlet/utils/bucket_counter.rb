@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Maybe this is more appropriately named `UniqueRunCounter`, but that is a
+# little onerous. The spec examples for this class help demonstrate that this
+# class is really concerned with "unique runs".
 class BucketCounter
   attr_reader :value
 

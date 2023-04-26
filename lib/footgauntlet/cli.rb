@@ -48,15 +48,15 @@ module Footgauntlet
       Exit.error(ex)
     end
 
-    def shutdown
-      stop
-      Exit.success
-    end
-
     def start
       @stream.start
       @consumer.start
       @producer.start
+    end
+
+    def shutdown
+      stop
+      Exit.success
     end
 
     def stop

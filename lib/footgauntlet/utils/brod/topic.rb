@@ -30,7 +30,7 @@ module Brod
       Brod.logger.info({
         brod: "publish",
         topic: @name,
-        record: record.strip,
+        record: record.inspect.strip,
       })
 
       @subscriptions.each do |subscription|

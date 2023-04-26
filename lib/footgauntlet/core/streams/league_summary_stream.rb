@@ -7,73 +7,93 @@ require "footgauntlet/utils/brod/consumer"
 
 module Footgauntlet
   module Core
-    class LeagueSummaryStream < Brod::Stream
-      def processor_klass
-        LeagueSummaryProcessor
+    class LeagueSummaryStream 
+      class << self
+        def build
+          Brod::Stream.new(
+            Config::Stream,
+            Config::Source,
+            Config::Sink,
+          )
+        end
       end
 
-      def emit_on_stop
-        true
-      end
+      module Config
+        module Stream
+          class << self
+            def processor
+              LeagueSummaryProcessor
+            end
 
-      class Source < Brod::Consumer
-        TEAM_REGEX = /^([a-zA-Z\s]+)\s+(\d+)\s*$/
-
-        def topic_name
-          "games"
+            def emit_on_stop
+              true
+            end
+          end
         end
 
-        def deserialize(game)
-          team_scores =
-            game.split(",").map! do |team|
-              match = team.match(TEAM_REGEX)
-              raise Brod::Consumer::DeserializationError if match.nil?
+        module Source
+          TEAM_REGEX = /^([a-zA-Z\s]+)\s+(\d+)\s*$/
 
-              team_name, score = match.captures
-              team = Team.new(name: team_name.strip)
-              score = score.to_i
+          class << self
+            def topic_name
+              "games"
+            end
 
-              TeamScore.new(
-                team:,
-                score:,
+            def deserialize(game)
+              team_scores =
+                game.split(",").map! do |team|
+                  match = team.match(TEAM_REGEX)
+                  raise Brod::Consumer::DeserializationError if match.nil?
+
+                  team_name, score = match.captures
+                  team = Team.new(name: team_name.strip)
+                  score = score.to_i
+
+                  TeamScore.new(
+                    team:,
+                    score:,
+                  )
+                end
+
+              raise Brod::Consumer::DeserializationError if team_scores.size != 2
+              home_score, away_score = team_scores
+
+              Game.new(
+                home_score:,
+                away_score:,
               )
             end
 
-          raise Brod::Consumer::DeserializationError if team_scores.size != 2
-          home_score, away_score = team_scores
-
-          Game.new(
-            home_score:,
-            away_score:,
-          )
+            def handle_deserialization_error(error)
+              # Warn and move on.
+              Footgauntlet.logger.warn(error)
+            end
+          end
         end
 
-        def handle_deserialization_error(error)
-          # Warn and move on.
-          Footgauntlet.logger.warn(error)
-        end
-      end
-
-      class Sink < Brod::Producer
-        def topic_name
-          "league_summaries"
-        end
-
-        def serialize(summary)
-          String.new.tap do |memo|
-            memo << "Matchday #{summary.matchday_number}\n"
-
-            summary.ranking.each do |ranked_team_points|
-              name = ranked_team_points.team.name
-              points = ranked_team_points.points
-              unit = points == 1 ? "pt" : "pts"
-
-              # Rank is currently unused but nonetheless appears barely
-              # unambiguously enough in the prompt.
-              memo << "#{name}, #{points} #{unit}\n"
+        module Sink
+          class << self
+            def topic_name
+              "league_summaries"
             end
 
-            memo << "\n"
+            def serialize(summary)
+              String.new.tap do |memo|
+                memo << "Matchday #{summary.matchday_number}\n"
+
+                summary.ranking.each do |ranked_team_points|
+                  name = ranked_team_points.team.name
+                  points = ranked_team_points.points
+                  unit = points == 1 ? "pt" : "pts"
+
+                  # Rank is currently unused but nonetheless appears barely
+                  # unambiguously enough in the prompt.
+                  memo << "#{name}, #{points} #{unit}\n"
+                end
+
+                memo << "\n"
+              end
+            end
           end
         end
       end

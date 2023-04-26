@@ -6,24 +6,35 @@ module Brod
   class Consumer
     DeserializationError = Class.new(RuntimeError)
 
-    def initialize(&consume)
-      @topic = Topic.new(topic_name)
+    def initialize(config, &consume)
+      @config = config
+      @topic = Topic.new(@config.topic_name)
       @consume = consume
     end
 
     def start
-      @topic.subscribe(method(:consume))
+      @topic.subscribe(
+        method(:consume)
+      )
     end
 
     def stop
-      @topic.unsubscribe(method(:consume))
+      @topic.unsubscribe(
+        method(:consume)
+      )
     end
 
+    def topic_name
+      @topic.name
+    end
+
+    private
+
     def consume(record)
-      record = deserialize(record)
+      record = @config.deserialize(record)
       @consume.call(record)
     rescue DeserializationError => ex
-      handle_deserialization_error(ex)
+      @config.handle_deserialization_error(ex)
     end
   end
 end

@@ -5,18 +5,23 @@ require "footgauntlet/utils/brod/producer"
 
 module Brod
   class Stream
-    def initialize
-      @sink = self.class::Sink.new
-
-      produce = @sink.method(:produce)
-      @processor = processor_klass.new(&produce)
-
-      consume = @processor.method(:ingest)
-      @source = self.class::Source.new(&consume)
-
+    def initialize(stream_config, source_config, sink_config)
       # Pretty unsure if there are subtle sequencing bugs here in the face of
       # signal traps or exceptions that cause control flow to jump. 
       @stopped = true
+      @emit_on_stop = stream_config.emit_on_stop
+
+      @sink = Producer.new(sink_config)
+
+      @processor =
+        stream_config.processor.new do |record|
+          @sink.produce(record)
+        end
+
+      @source =
+        Consumer.new(source_config) do |record|
+          @processor.ingest(record)
+        end
     end
 
     def start
@@ -32,7 +37,7 @@ module Brod
       @stopped = true
 
       @source.stop
-      @processor.emit if emit_on_stop
+      @processor.emit if @emit_on_stop
       @sink.stop
     end
 

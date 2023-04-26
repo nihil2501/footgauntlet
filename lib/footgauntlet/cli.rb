@@ -1,30 +1,31 @@
 # frozen_sting_literal: true
 
 require "footgauntlet/cli/exit"
+require "footgauntlet/cli/io"
 require "footgauntlet/cli/options"
 require "footgauntlet/core/streams/league_summary_stream"
-require "footgauntlet/utils/brod/consumer"
-require "footgauntlet/utils/brod/producer"
 
 module Footgauntlet
   class CLI
     def initialize
       options = Options.parse!
+      @input_stream = options.input_stream
+
       Footgauntlet.configure do |config|
         config.log_file = options.log_file
         config.verbose = options.verbose
       end
 
-      @stream = Core::LeagueSummaryStream.new
+      @stream = Core::LeagueSummaryStream.build
 
       @consumer =
-        IOConsumer.new(
+        IO::Consumer.new(
           @stream.sink_topic_name,
           options.output_stream,
         )
 
       @producer =
-        IOProducer.new(
+        IO::Producer.new(
           @stream.source_topic_name,
           options.input_stream,
         )
@@ -62,50 +63,6 @@ module Footgauntlet
       @producer.stop
       @stream.stop
       @consumer.stop
-    end
-
-    class IOProducer < Brod::Producer
-      attr_reader :topic_name
-
-      def initialize(topic_name, input_stream)
-        @topic_name = topic_name
-        @input_stream = input_stream
-
-        super()
-      end
-
-      def start
-        super
-
-        @input_stream.each do |record|
-          produce(record)
-        end
-      end
-
-      def serialize(record)
-        record
-      end
-    end
-
-    class IOConsumer < Brod::Consumer
-      attr_reader :topic_name
-
-      def initialize(topic_name, output_stream)
-        @topic_name = topic_name
-
-        super() do |record|
-          output_stream.puts(record)
-        end
-      end
-
-      def deserialize(record)
-        record
-      end
-
-      def handle_deserialization_error(error)
-        # This shouldn't happen.
-        raise error
-      end
     end
   end
 end

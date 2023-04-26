@@ -27,16 +27,16 @@ module Footgauntlet
         progname = self.name
         base_formatter = Logger::Formatter.new
         formatter =
-          lambda do |*args, message|
-            if message.respond_to?(:to_h)
+          lambda do |*args, msg|
+            if msg.respond_to?(:to_h)
               # 1-level deep `to_json`.
-              message = message.to_h.map { |k, v| %{"#{k}": "#{v}"} }
-              message = %{{ #{message.join(", ")} }}
+              msg = msg.to_h.map { |k, v| %{"#{k}": "#{v}"} }
+              msg = %{{ #{msg.join(", ")} }}
             end
 
             base_formatter.call(
               *args,
-              message
+              msg
             )
           end
 

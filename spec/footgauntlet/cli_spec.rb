@@ -32,7 +32,7 @@ describe Footgauntlet::CLI do
       end
 
     it "produces the expected output stream" do
-      Footgauntlet::CLI::Exit.stub(:success, options) do
+      Footgauntlet::CLI::Exit.stub(:success, nil) do
         Footgauntlet::CLI::Options.stub(:parse!, options) do
           Footgauntlet::CLI.new.run
 

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "brod_helper"
 require "footgauntlet"
 require "minitest/pride"
 

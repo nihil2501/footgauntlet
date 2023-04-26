@@ -7,7 +7,7 @@ require "footgauntlet/utils/ranker"
 module Footgauntlet
   module Core
     class LeagueSummaryProcessor
-      def initialize(on_emit)
+      def initialize(&on_emit)
         @on_emit = on_emit
         @league_points = LeaguePoints.new
         @matchday_counter = BucketCounter.new

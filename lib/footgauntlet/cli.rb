@@ -15,32 +15,19 @@ module Footgauntlet
         config.verbose = options.verbose
       end
 
-      @stream = Core::LeagueSummaryStream
-
-      consume =
-        lambda do |record|
-          options.output_stream.puts(record)
-        end
+      @stream = Core::LeagueSummaryStream.new
 
       @consumer =
-        Brod::Consumer.new(
+        IOConsumer.new(
           @stream.sink_topic_name,
-          :itself.to_proc, -> {},
-          consume
+          options.output_stream,
         )
 
       @producer =
-        Brod::Producer.new(
+        IOProducer.new(
           @stream.source_topic_name,
-          :itself.to_proc
+          options.input_stream,
         )
-
-      @run_proc =
-        lambda do
-          options.input_stream.each do |record|
-            @producer.produce(record)
-          end
-        end
     end
 
     def run
@@ -53,7 +40,6 @@ module Footgauntlet
       end
 
       start
-      @run_proc.call
       shutdown
     rescue Error => ex
       stop
@@ -76,6 +62,50 @@ module Footgauntlet
       @producer.stop
       @stream.stop
       @consumer.stop
+    end
+
+    class IOProducer < Brod::Producer
+      attr_reader :topic_name
+
+      def initialize(topic_name, input_stream)
+        @topic_name = topic_name
+        @input_stream = input_stream
+
+        super()
+      end
+
+      def start
+        super
+
+        @input_stream.each do |record|
+          produce(record)
+        end
+      end
+
+      def serialize(record)
+        record
+      end
+    end
+
+    class IOConsumer < Brod::Consumer
+      attr_reader :topic_name
+
+      def initialize(topic_name, output_stream)
+        @topic_name = topic_name
+
+        super() do |record|
+          output_stream.puts(record)
+        end
+      end
+
+      def deserialize(record)
+        record
+      end
+
+      def handle_deserialization_error(error)
+        # This shouldn't happen.
+        raise error
+      end
     end
   end
 end

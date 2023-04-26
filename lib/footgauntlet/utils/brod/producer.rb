@@ -4,15 +4,14 @@ require "footgauntlet/utils/brod/topic"
 
 module Brod
   class Producer
-    def initialize(topic_name, serializer)
+    def initialize
       @topic = Topic.new(topic_name)
-      @serializer = serializer
       @stopped = true
     end
 
     def produce(record)
       return if @stopped
-      record = @serializer.call(record)
+      record = serialize(record)
       @topic.publish(record)
     end
 
@@ -22,10 +21,6 @@ module Brod
 
     def stop
       @stopped = true
-    end
-
-    def topic_name
-      @topic.name
     end
   end
 end

@@ -11,8 +11,6 @@ module Brod
       end
     end
 
-    attr_reader :name
-
     def initialize(name)
       @name = name
       @subscriptions = self.class.subscriptions[@name]
@@ -29,7 +27,7 @@ module Brod
     def publish(record)
       Brod.logger.info({
         brod: "publish",
-        topic: self.name,
+        topic: @name,
         record: record.strip,
       })
 

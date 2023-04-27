@@ -36,6 +36,15 @@ describe Brod do
     @producer.start
   end
 
+  #
+  #
+  #                      ,--Stream-->[top]--Stream-----,
+  #                      |                             |
+  # Producer-->[source]--|                             |-->[sink]-->Consumer
+  #                      |                             |
+  #                      '--Stream-->[bottom]--Stream--'
+  #
+  #
   it "affords a diamond topoloy" do
     produce_source
 

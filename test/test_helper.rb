@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+
 require "brod_helper"
 require "footgauntlet"
+require "minitest/autorun"
 require "minitest/pride"
 
 # Suppress logger output in specs.

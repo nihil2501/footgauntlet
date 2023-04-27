@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "footgauntlet/utils/ranker"
-require "spec_helper"
+require "test_helper"
 
 describe Ranker do
   describe ".new" do

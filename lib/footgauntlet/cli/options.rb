@@ -52,8 +52,9 @@ module Footgauntlet
             raise ParseError, ex.message
           end
         rescue OptionsError => ex
+          STDERR.puts ex
           STDERR.puts @parser
-          raise ex
+          Exit.error(ex)
         end
 
         @input_stream.sync = true

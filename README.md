@@ -1,40 +1,27 @@
 # Footgauntlet
+A CLI app for processing streams of soccer data. 
 
-## Footgauntlet Core
+## Installation
+    $ gem install footgauntlet --source https://TOKEN@gem.fury.io/nihil2501/
+
+## Usage
+    $ footgauntlet --help
+
+## Development
+
+After checking out the repo, run `bin/setup` to install dependencies. Then, run
+`rake test` to run the tests. You can try a full e2e test with `bin/e2e`. You
+can also run `bin/console` for an interactive prompt that will allow you to
+experiment.
+
+### Documentation
+
+#### Footgauntlet Core
 Design docs for the domain core of any shell application can be found here:
 [/lib/footgauntlet/core/DESIGN.md](/lib/footgauntlet/core/DESIGN.md)
 
-## Brod
-!["Can you pass the salt?"](https://imgs.xkcd.com/comics/the_general_problem.png)
-
-Design docs for the underyling stream processing framework Brod can be found here:
+#### Brod
+Design docs for the underyling stream processing framework `Brod` can be found here:
 [/lib/footgauntlet/utils/brod/DESIGN.md](/lib/footgauntlet/utils/brod/DESIGN.md)
 
-## Prerequisites
-Before you can run the tests, you'll need to ensure some prerequisites are
-satisfied.
-
-Have the following installed on your system:
-- Ruby (version specified in the `Gemfile`, e.g., `3.2.2`)
-- Bundler (the dependency manager for Ruby projects)
-
-You can use a Ruby version manager to manage multiple Ruby versions on your
-system:
-- [asdf](https://asdf-vm.com/).
-- [RVM](https://rvm.io/)
-- [rbenv](https://github.com/rbenv/rbenv)
-
-Next, install dependencies with:
-```
-bundle install
-```
-
-## Running the tests
-```
-bundle exec rake
-```
-
-## Full e2e test
-```
-./bin/e2e
-```
+!["Can you pass the salt?"](https://imgs.xkcd.com/comics/the_general_problem.png)

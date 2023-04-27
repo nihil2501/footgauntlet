@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "test_helper"
 
 describe Footgauntlet::CLI do
   describe "#run" do
     before do
       # TODO: It'd be nice for this to happen automatically otherwise we have a
-      # footgun in our footgauntlet. 
+      # footgun in our footgauntlet.
       Brod::Topic.clear
     end
 

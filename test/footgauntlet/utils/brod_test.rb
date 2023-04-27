@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "footgauntlet/utils/brod/stream"
-require "spec_helper"
+require "test_helper"
 
 describe Brod do
   class Processor
@@ -16,7 +16,7 @@ describe Brod do
 
   before do
     # TODO: It'd be nice for this to happen automatically otherwise we have a
-    # footgun in our footgauntlet. 
+    # footgun in our footgauntlet.
     Brod::Topic.clear
 
     @source = 1..5

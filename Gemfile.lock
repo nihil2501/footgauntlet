@@ -1,3 +1,8 @@
+PATH
+  remote: .
+  specs:
+    footgauntlet (0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -8,11 +13,9 @@ PLATFORMS
   arm64-darwin-22
 
 DEPENDENCIES
-  minitest (~> 5.18.0)
-  rake (~> 13.0.6)
-
-RUBY VERSION
-   ruby 3.2.2p53
+  footgauntlet!
+  minitest (~> 5.18)
+  rake (~> 13.0)
 
 BUNDLED WITH
    2.4.11

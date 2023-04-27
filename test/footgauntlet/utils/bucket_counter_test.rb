@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "footgauntlet/utils/bucket_counter"
-require "spec_helper"
+require "test_helper"
 
 describe BucketCounter do
   before do

@@ -2,7 +2,7 @@
 
 require "footgauntlet/core/models"
 require "footgauntlet/core/processors/league_summary_processor"
-require "spec_helper"
+require "test_helper"
 
 describe Footgauntlet::Core::LeagueSummaryProcessor do
   before do

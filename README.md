@@ -2,7 +2,7 @@
 A CLI app for processing streams of soccer data. 
 
 ## Installation
-    $ gem install footgauntlet --source https://TOKEN@gem.fury.io/nihil2501/
+    $ gem install footgauntlet --source https://2cAnm0-7LJYKUjuSb7sJmKfw6A1KdkBz5I@gem.fury.io/nihil2501/
 
 ## Usage
     $ footgauntlet --help

@@ -30,9 +30,9 @@ module Footgauntlet
         @parser = OptionParser.new
         @parser.banner = "Usage: footgauntlet [options]"
 
-        on_file("input", "r") { @input_stream = _1 }
-        on_file("output", "w") { @output_stream = _1 }
-        on_file("logs", "w") { @log_file = _1 }
+        on_file("input", "r", "STDIN") { @input_stream = _1 }
+        on_file("output", "w", "STDOUT") { @output_stream = _1 }
+        on_file("logs", "w", "STDERR") { @log_file = _1 }
 
         @parser.on("-v", "--verbose", "Run verbosely") do
           @verbose = true
@@ -63,11 +63,11 @@ module Footgauntlet
 
       private
 
-      def on_file(name, mode)
+      def on_file(name, mode, default)
         args = [
            "-#{name[0]}", # `short_name`
            "--#{name} #{name.upcase}", # `long_name`
-           "Path to #{name} file", # `description`
+           "Path to #{name} file (defaults to #{default})", # `description`
         ]
 
         @parser.on(*args) do |path|

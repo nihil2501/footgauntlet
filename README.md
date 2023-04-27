@@ -2,12 +2,13 @@
 
 ## Footgauntlet Core
 Design docs for the domain core of any shell application can be found here:
-[lib/footgauntlet/core/DESIGN.md](lib/footgauntlet/core/DESIGN.md)
+[/lib/footgauntlet/core/DESIGN.md](/lib/footgauntlet/core/DESIGN.md)
 
 ## Brod
 !["Can you pass the salt?"](https://imgs.xkcd.com/comics/the_general_problem.png)
+
 Design docs for the underyling stream processing framework Brod can be found here:
-[lib/footgauntlet/utils/brod/DESIGN.md](lib/footgauntlet/utils/brod/DESIGN.md)
+[/lib/footgauntlet/utils/brod/DESIGN.md](/lib/footgauntlet/utils/brod/DESIGN.md)
 
 ## Prerequisites
 Before you can run the tests, you'll need to ensure some prerequisites are

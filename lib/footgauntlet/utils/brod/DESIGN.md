@@ -22,7 +22,7 @@ One can build up topologies that look like this:
 ```
 
 
-                       ,--Stream-->[top]--Stream-----,
+                       ,--Stream----->[top]--Stream--,
                        |                             |
   Producer-->[source]--|                             |-->[sink]-->Consumer
                        |                             |

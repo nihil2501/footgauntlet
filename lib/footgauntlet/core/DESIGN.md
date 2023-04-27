@@ -9,7 +9,7 @@ the processor. Streams should be placed in the `streams` directory. With these
 streams defined in core, shell applications can start them and feed facts into
 the appropriate topics from the outside world.
 The details of using the `Brod` framework can be found at:
-`lib/footgauntlet/utils/brod/DESIGN.md`
+[/lib/footgauntlet/utils/brod/DESIGN.md](/lib/footgauntlet/utils/brod/DESIGN.md)
 
 ```ruby
 class MyProcessor

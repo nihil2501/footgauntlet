@@ -41,7 +41,9 @@ module Brod
     private
 
     def log_publish(record)
-      message = record.inspect.strip 
+      # TODO: Fix.
+      # `record` may not be guaranteed to `respond_to?(:to_s)`.
+      message = record.to_s.strip
       message = { brod: "publish", topic: @name, record: message }
 
       # 1-level deep `to_json`.

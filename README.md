@@ -13,7 +13,7 @@ Design docs for the underyling stream processing framework Brod can be found her
 Before you can run the tests, you'll need to ensure some prerequisites are
 satisfied.
 
-Have the following installed on your system: 
+Have the following installed on your system:
 - Ruby (version specified in the `Gemfile`, e.g., `3.2.2`)
 - Bundler (the dependency manager for Ruby projects)
 

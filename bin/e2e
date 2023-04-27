@@ -9,6 +9,12 @@ do
 done \
 \
 < "${DIR}/../spec/fixtures/input.txt" \
-| tee >(cat >&2) \
-| "${DIR}/footgauntlet" \
-| tee "/dev/null"
+| "${DIR}/footgauntlet" --verbose \
+> /dev/null
+
+# If Ctrl-C during this, command will still emit to STDOUT, but log won't show
+# due to:
+#   `log writing failed. can't be called from trap context`
+#
+# This error occurs because the Ruby Logger class cannot be used in a trap
+# context.

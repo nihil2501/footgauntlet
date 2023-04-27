@@ -1,0 +1,14 @@
+#!/bin/bash
+
+DIR="$(dirname $(readlink -f "$0"))"
+
+while IFS= read -r line
+do
+  echo "$line"
+  sleep 1
+done \
+\
+< "${DIR}/../spec/fixtures/input.txt" \
+| tee >(cat >&2) \
+| "${DIR}/footgauntlet" \
+| tee "/dev/null"

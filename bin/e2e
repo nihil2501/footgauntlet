@@ -8,7 +8,7 @@ do
   sleep 1
 done \
 \
-< "${DIR}/../spec/fixtures/input.txt" \
+< "${DIR}/../test/fixtures/input.txt" \
 | "${DIR}/footgauntlet" --verbose \
 > /dev/null
 

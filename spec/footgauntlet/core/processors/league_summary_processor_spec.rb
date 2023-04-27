@@ -38,12 +38,12 @@ describe Footgauntlet::Core::LeagueSummaryProcessor do
       # process that invokes this model, that it forces this model to yield a
       # particular interpretation of the domain. This requirement is
       # irreconcilable with being meaningful in the domain. The thing to
-      # observe in this spec example is that the below result is technically a
+      # observe in this test example is that the below result is technically a
       # meaningful one, but it also demonstrates that if the enclosing process
       # feeds in the empty feed, that an empty matchday 1 result would actually
       # not be meaningful. In that case, it would make more sense to not emit.
       # It is possible to encode that in the processor but then it wouldn't
-      # make sense for this spec example.
+      # make sense for this test example.
       @commands = [
         [:emit],
         [:ingest, game],

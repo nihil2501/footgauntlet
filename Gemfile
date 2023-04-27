@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
 
-ruby "3.2.2"
+gemspec
 
-gem "minitest", "~>5.18.0"
-gem "rake", "~>13.0.6"
+gem "minitest", "~>5.18"
+gem "rake", "~>13.0"

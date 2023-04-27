@@ -4,7 +4,7 @@ require "footgauntlet/utils/brod/stream"
 
 module BrodHelpers
   # All of these helpers are the most trivial components which makes them
-  # well-suited for spec'ing topology considerations.
+  # well-suited for testing topology considerations.
   module Stream
     class << self
       def build(processor, source_name, sink_name)

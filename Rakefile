@@ -1,6 +1,12 @@
-require "minitest/test_task"
+# frozen_string_literal: true
 
-Minitest::TestTask.create(:spec) do |task|
-  task.libs = %w[lib spec .]
-  task.test_globs = ["spec/**/*_spec.rb"]
+require "bundler/gem_tasks"
+require "rake/testtask"
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList["test/**/test_*.rb"]
 end
+
+task default: :test

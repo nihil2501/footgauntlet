@@ -9,8 +9,6 @@ module Footgauntlet
   class CLI
     def initialize
       options = Options.parse!
-      @input_stream = options.input_stream
-
       Footgauntlet.configure do |config|
         config.log_file = options.log_file
         config.verbose = options.verbose

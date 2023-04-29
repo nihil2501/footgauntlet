@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
-require "footgauntlet/utils/ranker"
+require "footgauntlet/core/processors/league_summary_processor/ranker"
 require "test_helper"
 
-describe Ranker do
+describe Footgauntlet::Core::LeagueSummaryProcessor::Ranker do
   describe ".new" do
     describe "without a `map` configured" do
       it "raises a `MissingRequiredAttributesError`" do
-        _ { Ranker.new { } }.must_raise(
-          Ranker::Definition::MissingRequiredAttributesError
-        )
+        _ { Footgauntlet::Core::LeagueSummaryProcessor::Ranker.new { } }
+          .must_raise(
+            Footgauntlet::Core::LeagueSummaryProcessor::Ranker::Definition::MissingRequiredAttributesError
+          )
       end
     end
   end
@@ -22,7 +23,7 @@ describe Ranker do
     describe "with comparators specified" do
       before do
         @ranker =
-          Ranker.new do |definition|
+          Footgauntlet::Core::LeagueSummaryProcessor::Ranker.new do |definition|
             definition.comparator = -> { _1 / 3 <=> _2 / 3 }
             definition.inner_comparator = -> { _2 <=> _1 }
             definition.map = -> (object, rank) { [rank, object] }
@@ -75,12 +76,12 @@ describe Ranker do
     describe "with comparators unspecified" do
       before do
         @ranker =
-          Ranker.new do |definition|
+          Footgauntlet::Core::LeagueSummaryProcessor::Ranker.new do |definition|
             definition.map = -> (object, rank) { [rank, object] }
           end
       end
 
-      it "uses trivial comparator" do
+      it "uses trivial comparators" do
         expected = [
           [1, 9],
           [2, 8],

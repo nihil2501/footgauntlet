@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require "footgauntlet/utils/bucket_counter"
+require "footgauntlet/core/processors/league_summary_processor/bucket_counter"
 require "test_helper"
 
-describe BucketCounter do
+describe Footgauntlet::Core::LeagueSummaryProcessor::BucketCounter do
   before do
-    @bucket_counter = BucketCounter.new
+    @bucket_counter = Footgauntlet::Core::LeagueSummaryProcessor::BucketCounter.new
     @values = []
   end
 

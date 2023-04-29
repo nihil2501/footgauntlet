@@ -101,17 +101,25 @@ consumer.stop
 To make a stream processor that processes facts between a source topic and sink
 topic one must supply the two aformentioned kinds of configuration as well as
 another configuration specifying the behavior surrounding the processor itself.
-A processor in turn needs to have an `ingest` instance method and be initialized
+A processor in turn needs to have an `ingest` instance method, be initialized
 with a block that will be called when the processor is compelled to emit some
-fact.
+fact, and have an `emit` method so that it can be made to do so if
+`emit_on_stop` is configured to be true.
 
 ```ruby
 class Processor
   def initialize(&on_emit)
     @on_emit = on_emit
+    @records = []
   end
 
   def ingest(record)
+    @records << record
+    emit
+  end
+
+  def emit
+    record = @records.last
     @on_emit.call(record)
   end
 end

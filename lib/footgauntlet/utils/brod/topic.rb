@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 module Brod
+  # Represents a topic in a publish-subscribe pattern for message distribution.
   class Topic
     class << self
+      # @return [Hash{String => Array<Proc>}]
       def subscriptions
         @subscriptions ||=
           Hash.new do |memo, topic|
@@ -10,26 +12,36 @@ module Brod
           end
       end
 
+      # Clears all subscriptions.
+      # return [void]
       def clear
         @subscriptions = nil
       end
     end
 
+    # @return [String]
     attr_reader :name
 
+    # @param name [String]
     def initialize(name)
       @subscriptions = Topic.subscriptions[name]
       @name = name
     end
 
+    # @param subscription [Proc]
+    # @return [void]
     def subscribe(subscription)
       @subscriptions << subscription
     end
 
+    # @param subscription [Proc]
+    # @return [void]
     def unsubscribe(subscription)
       @subscriptions.delete(subscription)
     end
 
+    # @param record [Object]
+    # @return [void]
     def publish(record)
       log_publish(record)
 

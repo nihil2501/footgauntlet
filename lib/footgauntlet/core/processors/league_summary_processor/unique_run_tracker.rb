@@ -3,12 +3,12 @@
 module Footgauntlet
   module Core
     class LeagueSummaryProcessor
-      class UniqueRunCounter
-        attr_reader :value
+      class UniqueRunTracker
+        attr_reader :count
 
         def initialize
           @unique_run = Set[]
-          @value = 0
+          @count = 0
         end
 
         def complete?(items)
@@ -23,7 +23,7 @@ module Footgauntlet
 
         def complete!
           @unique_run.clear
-          @value += 1
+          @count += 1
         end
       end
     end

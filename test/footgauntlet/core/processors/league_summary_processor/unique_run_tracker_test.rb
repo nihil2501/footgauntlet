@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-require "footgauntlet/core/processors/league_summary_processor/unique_run_counter"
+require "footgauntlet/core/processors/league_summary_processor/unique_run_tracker"
 require "test_helper"
 
-describe Footgauntlet::Core::LeagueSummaryProcessor::UniqueRunCounter do
+describe Footgauntlet::Core::LeagueSummaryProcessor::UniqueRunTracker do
   before do
-    @counter = Footgauntlet::Core::LeagueSummaryProcessor::UniqueRunCounter.new
-    @values = []
+    @tracker = Footgauntlet::Core::LeagueSummaryProcessor::UniqueRunTracker.new
+    @counts = []
   end
 
   def issue_commands
     @commands.each do |args|
       command, *args = args
-      @counter.send(command, *args)
-      @values << @counter.value
+      @tracker.send(command, *args)
+      @counts << @tracker.count
     end
   end
 
@@ -40,7 +40,7 @@ describe Footgauntlet::Core::LeagueSummaryProcessor::UniqueRunCounter do
       ]
 
       issue_commands
-      actual = @values
+      actual = @counts
 
       assert_equal(
         expected,

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "footgauntlet/core/models"
-require "footgauntlet/core/processors/league_summary_processor/unique_run_counter"
+require "footgauntlet/core/processors/league_summary_processor/unique_run_tracker"
 require "footgauntlet/core/processors/league_summary_processor/ranker"
 
 module Footgauntlet
@@ -10,11 +10,11 @@ module Footgauntlet
       def initialize(&on_emit)
         @on_emit = on_emit
         @league_points = LeaguePoints.new
-        @matchday_counter = UniqueRunCounter.new
+        @matchday_tracker = UniqueRunTracker.new
       end
 
       def ingest(game)
-        emit_summary if @matchday_counter.complete?(game.teams)
+        emit_summary if @matchday_tracker.complete?(game.teams)
         @league_points.award(game)
       end
 
@@ -32,7 +32,7 @@ module Footgauntlet
         #     tallies.empty?
         #   end
         #   ```
-        @matchday_counter.complete!
+        @matchday_tracker.complete!
         emit_summary
       end
 
@@ -59,7 +59,7 @@ module Footgauntlet
               end
           end
 
-        matchday_number = @matchday_counter.value
+        matchday_number = @matchday_tracker.count
         ranking = @ranker.rank(@league_points, Ranking::COUNT)
         summary = LeagueSummary.new(matchday_number:, ranking:)
 

@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-require "footgauntlet/core/processors/league_summary_processor/bucket_counter"
+require "footgauntlet/core/processors/league_summary_processor/unique_run_counter"
 require "test_helper"
 
-describe Footgauntlet::Core::LeagueSummaryProcessor::BucketCounter do
+describe Footgauntlet::Core::LeagueSummaryProcessor::UniqueRunCounter do
   before do
-    @bucket_counter = Footgauntlet::Core::LeagueSummaryProcessor::BucketCounter.new
+    @counter = Footgauntlet::Core::LeagueSummaryProcessor::UniqueRunCounter.new
     @values = []
   end
 
   def issue_commands
     @commands.each do |args|
       command, *args = args
-      @bucket_counter.send(command, *args)
-      @values << @bucket_counter.value
+      @counter.send(command, *args)
+      @values << @counter.value
     end
   end
 

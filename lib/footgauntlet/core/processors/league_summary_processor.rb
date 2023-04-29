@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "footgauntlet/core/models"
-require "footgauntlet/core/processors/league_summary_processor/bucket_counter"
+require "footgauntlet/core/processors/league_summary_processor/unique_run_counter"
 require "footgauntlet/core/processors/league_summary_processor/ranker"
 
 module Footgauntlet
@@ -10,7 +10,7 @@ module Footgauntlet
       def initialize(&on_emit)
         @on_emit = on_emit
         @league_points = LeaguePoints.new
-        @matchday_counter = BucketCounter.new
+        @matchday_counter = UniqueRunCounter.new
       end
 
       def ingest(game)

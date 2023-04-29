@@ -4,7 +4,7 @@ module Brod
   # Represents a topic in a publish-subscribe pattern for message distribution.
   class Topic
     class << self
-      # @return [Hash{String => Array<Proc>}]
+      # @return [Hash<String, Array<Proc>>]
       def subscriptions
         @subscriptions ||=
           Hash.new do |memo, topic|

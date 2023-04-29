@@ -4,7 +4,12 @@ require "footgauntlet/utils/brod/consumer"
 require "footgauntlet/utils/brod/producer"
 
 module Brod
+  # A class to manage a data stream, which includes a source, a processor, and a
+  # sink.
   class Stream
+    # @param stream_config [#processor #emit_on_stop]
+    # @param source_config (see Brod::Consumer#initialize)
+    # @param sink_config (see Brod::Producer#initialize)
     def initialize(stream_config, source_config, sink_config)
       # Pretty unsure if there are subtle sequencing bugs here in the face of
       # signal traps or exceptions that cause control flow to jump. 
@@ -24,6 +29,7 @@ module Brod
         end
     end
 
+    # @return [void]
     def start
       return unless @stopped
       @stopped = false
@@ -32,6 +38,7 @@ module Brod
       @source.start
     end
 
+    # @return [void]
     def stop
       return if @stopped
       @stopped = true

@@ -42,23 +42,23 @@ module Footgauntlet
               [[:sort], -1]
             end
 
-          els =
+          items =
             enumerable.send(*call) do
               memo = @definition.comparator.call(_1, _2)
               memo = @definition.inner_comparator.call(_1, _2) if memo.zero?
               reversal * memo
             end
 
-          previous_el = nil
+          previous_item = nil
           rank = 1
 
-          els.map!.with_index do |el, i|
-            outranked = !previous_el.nil?
-            outranked &&= @definition.comparator.call(el, previous_el).negative?
+          items.map!.with_index do |item, i|
+            outranked = !previous_item.nil?
+            outranked &&= @definition.comparator.call(item, previous_item).negative?
             rank = i + 1 if outranked
 
-            previous_el = el
-            @definition.map.call(el, rank)
+            previous_item = item
+            @definition.map.call(item, rank)
           end
         end
       end

@@ -1,13 +1,15 @@
 # Footgauntlet Core
 Footgauntlet core consists of stream processors built from the simple `Brod` 
-stream processing framework. Processors contain the domain logic. They have an
-`ingest` method for taking in a record and are initialized with a block that is
-called when they want to emit a new fact. Processors should be placed in the
-`processors` directory. Streams then attach these processors to particular
-source and sink topics and specify how to deserialize into and serialize out of
-the processor. Streams should be placed in the `streams` directory. With these
-streams defined in core, shell applications can start them and feed facts into
-the appropriate topics from the outside world.
+stream processing framework.
+Processors contain the domain logic. They have an `ingest` method for taking in
+a record and are initialized with a block that is called when they want to emit
+a new fact or when they are explicitly made to do so by invoking their `emit`
+method. Processors should be placed in the `processors` directory.
+Streams then attach these processors to particular source and sink topics and
+specify how to deserialize into and serialize out of the processor. Streams
+should be placed in the `streams` directory. With these streams defined in core,
+shell applications can start them and feed facts into the appropriate topics
+from the outside world.
 The details of using the `Brod` framework can be found at:
 [/lib/footgauntlet/utils/brod/DESIGN.md](/lib/footgauntlet/utils/brod/DESIGN.md)
 
@@ -15,9 +17,16 @@ The details of using the `Brod` framework can be found at:
 class MyProcessor
   def initialize(&on_emit)
     @on_emit = on_emit
+    @records = []
   end
 
   def ingest(record)
+    @records << record
+    emit
+  end
+
+  def emit
+    record = @records.last
     @on_emit.call(record)
   end
 end

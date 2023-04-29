@@ -19,10 +19,9 @@ module Footgauntlet
         # * `map` (produces output when yielded object and rank)
         #
         # It is straightforward that `count` is a more dynamic argument for
-        # producing a ranking. `enumerable` is also taken as an argument to
-        # `rank` so that there is no assumption that we have a mutable
-        # collection that changes between calls to `rank` (e.g. the `Enumerable`
-        # interface).
+        # producing a ranking. `items` is also taken as an argument to `rank` so
+        # that there is no assumption that we have a mutable collection that
+        # changes between calls to `rank` (e.g. the `Enumerable` interface).
         Definition =
           ConfigurationFactory.create(
             :map,
@@ -34,16 +33,17 @@ module Footgauntlet
           @definition = Definition.new(&)
         end
 
-        def rank(enumerable, count = nil)
+        def rank(items, count = nil)
           call, reversal =
             if count
               [[:max, count], 1]
             else
+              # `-1` because `sort` is ascending while `max` is descending.
               [[:sort], -1]
             end
 
           items =
-            enumerable.send(*call) do
+            items.send(*call) do
               memo = @definition.comparator.call(_1, _2)
               memo = @definition.inner_comparator.call(_1, _2) if memo.zero?
               reversal * memo

@@ -2,6 +2,9 @@
 
 module Footgauntlet
   module Core
+    # This class is totally generic and makes no reference to anything in the
+    # domain logic of a league summary. But it lives here anyway because it
+    # doesn't seem like a generally useful utility.
     class LeagueSummaryProcessor
       class UniqueRunTracker
         attr_reader :count

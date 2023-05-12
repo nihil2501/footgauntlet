@@ -14,7 +14,7 @@ module Footgauntlet
           @count = 0
         end
 
-        def complete?(items)
+        def completed_by?(items)
           # Interesting note: operand order already optimized with respect to
           # cardinality by implementation of `Set#intersect?`:
           #   https://github.com/ruby/ruby/blob/v3_2_2/lib/set.rb#L483

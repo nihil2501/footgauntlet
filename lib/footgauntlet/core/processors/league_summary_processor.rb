@@ -14,7 +14,7 @@ module Footgauntlet
       end
 
       def ingest(game)
-        emit_summary if @matchday_tracker.complete?(game.teams)
+        emit_summary if @matchday_tracker.completed_by?(game.teams)
         @league_points.award(game)
       end
 

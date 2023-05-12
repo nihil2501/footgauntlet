@@ -17,15 +17,15 @@ describe Footgauntlet::Core::LeagueSummaryProcessor::UniqueRunTracker do
     end
   end
 
-  describe "due to a stream of #complete? and #complete! commands" do
+  describe "due to a stream of #completed_by? and #complete! commands" do
     before do
       @commands = [
-        [:complete!], [:complete?, Set[0]],
-        [:complete?, Set[0]], [:complete?, Set[1]],
-        [:complete?, Set[0]],
+        [:complete!], [:completed_by?, Set[0]],
+        [:completed_by?, Set[0]], [:completed_by?, Set[1]],
+        [:completed_by?, Set[0]],
         [:complete!],
-        [:complete!], [:complete?, Set[1]], [:complete?, Set[0]],
-        [:complete?, Set[1]],
+        [:complete!], [:completed_by?, Set[1]], [:completed_by?, Set[0]],
+        [:completed_by?, Set[1]],
       ]
     end
 

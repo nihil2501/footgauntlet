@@ -15,8 +15,7 @@ describe Footgauntlet::Core::LeagueSummaryProcessor do
 
   def issue_commands
     @commands.each do |args|
-      command, *args = args
-      @processor.send(command, *args)
+      @processor.send(*args)
     end
   end
 

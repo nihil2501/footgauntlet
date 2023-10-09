@@ -11,8 +11,7 @@ describe Footgauntlet::Core::LeagueSummaryProcessor::UniqueRunTracker do
 
   def issue_commands
     @commands.each do |args|
-      command, *args = args
-      @tracker.send(command, *args)
+      @tracker.send(*args)
       @counts << @tracker.count
     end
   end
